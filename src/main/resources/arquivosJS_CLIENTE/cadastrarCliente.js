@@ -24,35 +24,23 @@ function formatarDataParaISO(data) {
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("formCadastro");
 
-    // Formatar CPF automaticamente para ###.###.###-##
     document.getElementById("cpf").addEventListener("input", (e) => {
         let valor = e.target.value.replace(/\D/g, '');
         if (valor.length > 3) valor = valor.replace(/^(\d{3})(\d)/, "$1.$2");
         if (valor.length > 6) valor = valor.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
         if (valor.length > 9) valor = valor.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
-        if (valor.length > 14) valor = valor.slice(0, 14); // Limita o tamanho do campo
+        if (valor.length > 14) valor = valor.slice(0, 14);
         e.target.value = valor;
     });
 
-    // Formatar CEP automaticamente para #####-###
-    document.getElementById("cepFaturamento").addEventListener("input", (e) => {
-        let valor = e.target.value.replace(/\D/g, '');
-        if (valor.length > 5) valor = valor.replace(/^(\d{5})(\d)/, "$1-$2");
-        if (valor.length > 9) valor = valor.slice(0, 9); // Limita o tamanho do campo
-        e.target.value = valor;
-    });
-
-    // Formatar data automaticamente para ##/##/####
     document.getElementById("dataNascimento").addEventListener("input", (e) => {
         let valor = e.target.value.replace(/\D/g, '');
         if (valor.length > 2) valor = valor.replace(/^(\d{2})(\d)/, "$1/$2");
         if (valor.length > 5) valor = valor.replace(/^(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
-        if (valor.length > 10) valor = valor.slice(0, 10); // Limita o tamanho do campo
+        if (valor.length > 10) valor = valor.slice(0, 10);
         e.target.value = valor;
     });
 
-
-    // Verificar senha automaticamente
     document.getElementById("confirmaSenha").addEventListener("input", () => {
         const senha = document.getElementById("senha").value;
         const confirmaSenha = document.getElementById("confirmaSenha").value;
@@ -63,37 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             erroSenha.classList.add("d-none");
         }
-    });
-
-    // Buscar endereço via CEP
-    document.getElementById("cepFaturamento").addEventListener("blur", async () => {
-        const cep = document.getElementById("cepFaturamento").value.replace(/\D/g, '');
-        const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-        const dados = await resposta.json();
-
-        if (dados.erro) {
-            document.getElementById("cepErro").classList.remove("d-none");
-            return;
-        }
-
-        document.getElementById("cepErro").classList.add("d-none");
-        document.getElementById("logradouroFaturamento").value = dados.logradouro;
-        document.getElementById("bairroFaturamento").value = dados.bairro;
-        document.getElementById("cidadeFaturamento").value = dados.localidade;
-        document.getElementById("ufFaturamento").value = dados.uf;
-    });
-
-    // Copiar endereço para entrega
-    document.getElementById("copiarEndereco").addEventListener("change", () => {
-        const endereco = `
-${document.getElementById("logradouroFaturamento").value}, 
-Nº ${document.getElementById("numeroFaturamento").value}, 
-${document.getElementById("complementoFaturamento").value}, 
-${document.getElementById("bairroFaturamento").value}, 
-${document.getElementById("cidadeFaturamento").value} - 
-${document.getElementById("ufFaturamento").value}, 
-CEP: ${document.getElementById("cepFaturamento").value}`.trim();
-        document.getElementById("enderecoEntrega").value = endereco;
     });
 
     form.addEventListener("submit", async (e) => {
@@ -115,14 +72,7 @@ CEP: ${document.getElementById("cepFaturamento").value}`.trim();
         }
 
         const email = document.getElementById("email").value.trim();
-        const emailResp = await fetch(`http://localhost:8080/usuarios/email-existe?email=${email}`);
-        const emailExiste = await emailResp.json();
-        if (emailExiste) {
-            document.getElementById("emailErro").classList.remove("d-none");
-            return;
-        } else {
-            document.getElementById("emailErro").classList.add("d-none");
-        }
+        document.getElementById("emailErro").classList.add("d-none");
 
         const senha = document.getElementById("senha").value;
         const confirmaSenha = document.getElementById("confirmaSenha").value;
@@ -131,28 +81,19 @@ CEP: ${document.getElementById("cepFaturamento").value}`.trim();
             return;
         }
 
+        const generoSelecionado = document.getElementById("genero").value;
+
         const cliente = {
             nome: nome,
             cpf: cpf,
-            genero: document.getElementById("genero").value,
+            genero: generoSelecionado, // Agora é uma string como "Masculino", "Feminino" ou outro valor
             dataNascimento: formatarDataParaISO(document.getElementById("dataNascimento").value),
             email: email,
-            senha: senha,
-            grupo: "cliente",
-            enderecoFaturamento: {
-                cep: document.getElementById("cepFaturamento").value,
-                logradouro: document.getElementById("logradouroFaturamento").value,
-                numero: document.getElementById("numeroFaturamento").value,
-                complemento: document.getElementById("complementoFaturamento").value,
-                bairro: document.getElementById("bairroFaturamento").value,
-                cidade: document.getElementById("cidadeFaturamento").value,
-                uf: document.getElementById("ufFaturamento").value
-            },
-            enderecoEntrega: document.getElementById("enderecoEntrega").value
+            senha: senha
         };
 
         try {
-            const resposta = await fetch("http://localhost:8080/clientes", {
+            const resposta = await fetch("http://localhost:8080/cliente", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(cliente)
@@ -161,6 +102,23 @@ CEP: ${document.getElementById("cepFaturamento").value}`.trim();
             if (resposta.ok) {
                 alert("Cadastro realizado com sucesso!");
                 window.location.href = "login.html";
+            } else if (resposta.status === 400) {
+                const erro = await resposta.json();
+                if (erro.message) {
+                    if (erro.message.includes("email")) {
+                        document.getElementById("emailErro").classList.remove("d-none");
+                    } else if (erro.message.includes("cpf")) {
+                        alert("Erro: CPF inválido ou já cadastrado.");
+                    } else if (erro.message.includes("data")) {
+                        alert("Erro: Data de nascimento inválida.");
+                    } else if (erro.message.includes("genero")) {
+                        alert("Erro: Gênero informado é inválido.");
+                    } else {
+                        alert("Erro: " + erro.message);
+                    }
+                } else {
+                    alert("Erro ao cadastrar. Verifique os dados informados.");
+                }
             } else {
                 alert("Erro ao cadastrar. Verifique os dados.");
             }

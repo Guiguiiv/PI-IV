@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,12 +32,11 @@ public class Cliente {
 
     @Column(name = "datanascimento")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dataNascimento;
+    private LocalDate dataNascimento;
 
-    @Column(name = "genero")
-    private Boolean genero;
+    @Column(name = "genero", length = 20)
+    private String genero;
 
     @Column(name = "senha", columnDefinition = "TEXT", nullable = false)
     private String senha;
-
 }

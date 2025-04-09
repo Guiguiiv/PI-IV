@@ -34,6 +34,16 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.value = valor;
     });
 
+    // Máscara para data de nascimento (dd/mm/aaaa)
+    document.getElementById("dataNascimento").addEventListener("input", (e) => {
+        let valor = e.target.value.replace(/\D/g, '');
+        if (valor.length > 2) valor = valor.replace(/^(\d{2})(\d)/, "$1/$2");
+        if (valor.length > 5) valor = valor.replace(/^(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
+        if (valor.length > 10) valor = valor.slice(0, 10);
+        e.target.value = valor;
+    });
+
+
     // Confirmação de senha
     document.getElementById("confirmaSenha").addEventListener("input", () => {
         const senha = document.getElementById("senha").value;

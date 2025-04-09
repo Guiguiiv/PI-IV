@@ -1,29 +1,30 @@
 function validarCPF(cpf) {
     cpf = cpf.replace(/\D/g, '');
-    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+    if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
 
     let soma = 0, resto;
-    for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i - 1]) * (11 - i);
+
+    for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+    }
     resto = (soma * 10) % 11;
     if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf[9])) return false;
+    if (resto !== parseInt(cpf.charAt(9))) return false;
 
     soma = 0;
-    for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i - 1]) * (12 - i);
+    for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+    }
     resto = (soma * 10) % 11;
     if (resto === 10 || resto === 11) resto = 0;
 
-    return resto === parseInt(cpf[10]);
-}
-
-function formatarDataParaISO(data) {
-    const [dia, mes, ano] = data.split("/");
-    return `${ano}-${mes}-${dia}`;
+    return resto === parseInt(cpf.charAt(10));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("formCadastro");
 
+    // Máscara do CPF
     document.getElementById("cpf").addEventListener("input", (e) => {
         let valor = e.target.value.replace(/\D/g, '');
         if (valor.length > 3) valor = valor.replace(/^(\d{3})(\d)/, "$1.$2");
@@ -33,14 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.value = valor;
     });
 
-    document.getElementById("dataNascimento").addEventListener("input", (e) => {
-        let valor = e.target.value.replace(/\D/g, '');
-        if (valor.length > 2) valor = valor.replace(/^(\d{2})(\d)/, "$1/$2");
-        if (valor.length > 5) valor = valor.replace(/^(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
-        if (valor.length > 10) valor = valor.slice(0, 10);
-        e.target.value = valor;
-    });
-
+    // Confirmação de senha
     document.getElementById("confirmaSenha").addEventListener("input", () => {
         const senha = document.getElementById("senha").value;
         const confirmaSenha = document.getElementById("confirmaSenha").value;
@@ -72,22 +66,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const email = document.getElementById("email").value.trim();
-        document.getElementById("emailErro").classList.add("d-none");
-
         const senha = document.getElementById("senha").value;
         const confirmaSenha = document.getElementById("confirmaSenha").value;
+
         if (senha !== confirmaSenha) {
             document.getElementById("senhaErro").classList.remove("d-none");
             return;
         }
 
         const generoSelecionado = document.getElementById("genero").value;
+        let dataNascimento = document.getElementById("dataNascimento").value;
+
+        // Converter data para o formato yyyy-MM-dd
+        const partes = dataNascimento.split('/');
+        if (partes.length !== 3) {
+            alert("Formato de data inválido. Use dd/mm/aaaa.");
+            return;
+        }
+        dataNascimento = `${partes[2]}-${partes[1]}-${partes[0]}`;
 
         const cliente = {
             nome: nome,
             cpf: cpf,
-            genero: generoSelecionado, // Agora é uma string como "Masculino", "Feminino" ou outro valor
-            dataNascimento: formatarDataParaISO(document.getElementById("dataNascimento").value),
+            genero: generoSelecionado,
+            dataNascimento: dataNascimento,
             email: email,
             senha: senha
         };
@@ -104,23 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.location.href = "login.html";
             } else if (resposta.status === 400) {
                 const erro = await resposta.json();
-                if (erro.message) {
-                    if (erro.message.includes("email")) {
-                        document.getElementById("emailErro").classList.remove("d-none");
-                    } else if (erro.message.includes("cpf")) {
-                        alert("Erro: CPF inválido ou já cadastrado.");
-                    } else if (erro.message.includes("data")) {
-                        alert("Erro: Data de nascimento inválida.");
-                    } else if (erro.message.includes("genero")) {
-                        alert("Erro: Gênero informado é inválido.");
-                    } else {
-                        alert("Erro: " + erro.message);
-                    }
-                } else {
-                    alert("Erro ao cadastrar. Verifique os dados informados.");
-                }
+                alert("Erro: " + (erro.message || "Verifique os dados informados."));
             } else {
-                alert("Erro ao cadastrar. Verifique os dados.");
+                alert("Erro ao cadastrar. Tente novamente.");
             }
         } catch (erro) {
             console.error("Erro:", erro);

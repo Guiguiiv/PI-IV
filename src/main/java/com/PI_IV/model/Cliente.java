@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cliente")
@@ -31,7 +30,7 @@ public class Cliente {
     private String nome;
 
     @Column(name = "datanascimento")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd") // <-- corrigido aqui
     private LocalDate dataNascimento;
 
     @Column(name = "genero", length = 20)

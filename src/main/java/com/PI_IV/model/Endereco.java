@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "enderecos")
+@Table(name = "endereco")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -45,6 +45,6 @@ public class Endereco {
     private boolean principal;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente", nullable = false)
+    @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 }

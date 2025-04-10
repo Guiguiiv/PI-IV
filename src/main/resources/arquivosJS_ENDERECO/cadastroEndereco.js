@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-            const resposta = await fetch("http://localhost:8080/enderecos", {
+            const resposta = await fetch("http://localhost:3306/enderecos", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

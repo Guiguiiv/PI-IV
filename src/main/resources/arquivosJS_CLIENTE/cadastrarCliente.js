@@ -43,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.value = valor;
     });
 
-
     // Confirmação de senha
     document.getElementById("confirmaSenha").addEventListener("input", () => {
         const senha = document.getElementById("senha").value;
@@ -57,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Submissão do formulário com validações
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -75,6 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("cpfErro").classList.add("d-none");
         }
 
+        const genero = document.getElementById("genero").value;
+        let dataNascimento = document.getElementById("dataNascimento").value;
         const email = document.getElementById("email").value.trim();
         const senha = document.getElementById("senha").value;
         const confirmaSenha = document.getElementById("confirmaSenha").value;
@@ -84,10 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const generoSelecionado = document.getElementById("genero").value;
-        let dataNascimento = document.getElementById("dataNascimento").value;
-
-        // Converter data para o formato yyyy-MM-dd
+        // Converte data para yyyy-MM-dd
         const partes = dataNascimento.split('/');
         if (partes.length !== 3) {
             alert("Formato de data inválido. Use dd/mm/aaaa.");
@@ -98,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const cliente = {
             nome: nome,
             cpf: cpf,
-            genero: generoSelecionado,
+            genero: genero,
             dataNascimento: dataNascimento,
             email: email,
             senha: senha
@@ -113,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (resposta.ok) {
                 alert("Cadastro realizado com sucesso!");
-                window.location.href = "login.html";
+                window.location.href = "loginCliente.html";
             } else if (resposta.status === 400) {
                 const erro = await resposta.json();
                 alert("Erro: " + (erro.message || "Verifique os dados informados."));

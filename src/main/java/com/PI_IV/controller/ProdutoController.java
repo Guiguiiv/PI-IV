@@ -135,4 +135,27 @@ public class ProdutoController {
     public ResponseEntity<List<String>> listarImagensProduto(@PathVariable Integer produtoId) {
         return ResponseEntity.ok(service.listarImagensProduto(produtoId));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Produto> atualizarProduto(
+            @PathVariable Integer id,
+            @RequestBody Produto produtoAtualizado) {
+
+        Optional<Produto> produtoExistente = service.buscarPorId(id);
+        if (produtoExistente.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Produto produto = produtoExistente.get();
+        produto.setNome(produtoAtualizado.getNome());
+        produto.setDescricao(produtoAtualizado.getDescricao());
+        produto.setPreco(produtoAtualizado.getPreco());
+        produto.setQuantidadeEstoque(produtoAtualizado.getQuantidadeEstoque());
+        produto.setAvaliacao(produtoAtualizado.getAvaliacao());
+        // Você pode adicionar mais campos se necessário
+
+        Produto produtoSalvo = service.salvar(produto);
+        return ResponseEntity.ok(produtoSalvo);
+    }
+
 }

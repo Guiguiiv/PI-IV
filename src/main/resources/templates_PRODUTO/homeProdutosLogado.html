@@ -19,7 +19,7 @@
       <span id="saudacaoCliente" class="text-white fw-bold me-3"></span>
 
       <!-- Carrinho -->
-      <a href="carrinhoProdutos.html" class="btn btn-outline-light me-2">
+      <a href="/templates_PRODUTO/carrinhoProdutos.html" class="btn btn-outline-light me-2">
         <img src="/imagensEstaticas/carrinho-de-compras.png" alt="Carrinho" width="30">
       </a>
 
@@ -133,7 +133,8 @@
         if (localStorage.getItem("clienteLogado")) {
           localStorage.removeItem("clienteLogado");
         }
-        window.location.href = "loginCliente.html";
+        // Redireciona para a tela de produtos
+        window.location.href = "homeProdutos.html";
       });
     }
   });

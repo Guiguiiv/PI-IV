@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("clienteLogado", JSON.stringify(cliente));
 
                 // Redireciona para página de produtos (ou outra página protegida)
-                window.location.href = "/templates_PRODUTO/homeProdutosLogado.html";
+                window.open("/templates/produto/homeProdutosLogado.html", '_blank')
 
             } else {
                 const erro = await response.text();

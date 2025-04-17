@@ -2,6 +2,7 @@ package com.PI_IV.controller;
 
 import com.PI_IV.DAO.InterfaceCliente;
 import com.PI_IV.model.Cliente;
+import com.PI_IV.model.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -22,22 +25,40 @@ public class ClienteController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    // Listar todos os clientes
     @GetMapping
     public ResponseEntity<List<Cliente>> listarClientes() {
-        List<Cliente> lista = (List<Cliente>) dao.findAll();
-        return ResponseEntity.status(200).body(lista);
+        List<Cliente> clientes = StreamSupport.stream(dao.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(clientes);
     }
 
-    // Criar novo cliente
+
     @PostMapping
-    public ResponseEntity<Cliente> criarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<?> criarCliente(@RequestBody Cliente cliente) {
+        // Verifica se o e-mail já está cadastrado
+        if (dao.findByEmail(cliente.getEmail()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email já cadastrado.");
+        }
+
+        // Verifica se o CPF já está cadastrado
+        if (dao.findByCpf(cliente.getCpf()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF já cadastrado.");
+        }
+
+        // Criptografa a senha antes de salvar
         cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
-        Cliente clienteNovo = dao.save(cliente);
-        return ResponseEntity.status(201).body(clienteNovo);
+
+        // Garante que os endereços estão associados corretamente ao cliente
+        if (cliente.getEnderecos() != null) {
+            cliente.getEnderecos().forEach(endereco -> endereco.setCliente(cliente));
+        }
+
+        // Salva cliente e, graças ao Cascade, também salva os endereços
+        Cliente novoCliente = dao.save(cliente);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoCliente);
     }
 
-    // Editar cliente por ID (nome, data de nascimento, genero e senha)
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> editarCliente(@PathVariable Integer id, @RequestBody Cliente clienteAtualizado) {
         Optional<Cliente> clienteOpt = dao.findById(id);
@@ -57,10 +78,9 @@ public class ClienteController {
             return ResponseEntity.ok(clienteSalvo);
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    // Login do cliente
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Cliente cliente) {
         Optional<Cliente> clienteOpt = dao.findByEmail(cliente.getEmail());
@@ -78,27 +98,24 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Cliente não encontrado");
     }
 
-    // Buscar cliente por ID
     @GetMapping("/id/{id}")
     public ResponseEntity<Cliente> buscarPorId(@PathVariable Integer id) {
-        Optional<Cliente> cliente = dao.findById(id);
-        return cliente.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return dao.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Buscar cliente por email
     @GetMapping("/email/{email}")
     public ResponseEntity<Cliente> buscarPorEmail(@PathVariable String email) {
-        Optional<Cliente> cliente = dao.findByEmail(email);
-        return cliente.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return dao.findByEmail(email)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    // Buscar cliente por CPF
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<Cliente> buscarPorCpf(@PathVariable String cpf) {
-        Optional<Cliente> cliente = dao.findByCpf(cpf);
-        return cliente.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return dao.findByCpf(cpf)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

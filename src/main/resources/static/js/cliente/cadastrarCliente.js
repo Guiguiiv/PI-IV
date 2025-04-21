@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (response.ok) {
                 alert("Cadastro realizado com sucesso!");
-                window.location.href = "/PI-IV/static/js/cliente/loginCliente.js";
+                window.location.href = "/PI-IV/templates/cliente/naoLogado/loginCliente.html";
             } else {
                 const erro = await response.text();
                 alert("Erro ao cadastrar: " + erro);

@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(-45deg, #c3dafe, #f3e8ff, #f0fdf4, #fef9c3);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.navbar {
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    padding: 40px 15px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+h2 {
+    text-align: center;
+    font-weight: bold;
+    color: #0d6efd;
+    margin-bottom: 30px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.input-group-text {
+    background-color: #e7f1ff;
+    border-radius: 10px 0 0 10px;
+    color: #0d6efd;
+}
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: #0d6efd;
+}
+
+.btn-primary,
+.btn-outline-secondary {
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-1px);
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f1f1f1;
+    color: #000;
+    transform: translateY(-1px);
+}
+
+#senhaErro {
+    font-size: 0.85rem;
+    margin-top: 5px;
+}

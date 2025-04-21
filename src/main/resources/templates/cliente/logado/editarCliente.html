@@ -1,102 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Editar Cliente</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <style>
-    body {
-        background: #f8f9fa;
-    }
-
-    .login-container {
-        max-width: 800px;
-        margin: 80px auto;
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    }
-
-    h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #0d6efd;
-    }
-
-    .button-group {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .navbar-brand img {
-        margin-right: 8px;
-    }
-
-    .navbar {
-        border-radius: 0 0 10px 10px;
-    }
-  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/cliente/editarCliente.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-primary p-3 shadow-sm">
+<nav class="navbar navbar-expand-lg bg-primary shadow-sm">
   <div class="container">
-    <a class="navbar-brand d-flex align-items-center text-white" href="/PI-IV/templates/produto/homeProdutos.html">
-      <img src="/static/imagens/user.png" alt="Logo da Loja" width="40" class="me-2">Minha Conta
+    <a class="navbar-brand d-flex align-items-center text-white fw-bold" href="/PI-IV/templates/produto/homeProdutosLogado.html">
+      <img src="/static/imagens/user.png" alt="Logo da Loja" width="40" class="me-2 rounded-circle border border-white">
+      Minha Conta
     </a>
   </div>
 </nav>
 
-<div class="login-container">
-  <h2>Editar Perfil</h2>
+<!-- Formulário -->
+<section class="form-wrapper">
+  <div class="form-container glass">
+    <h2 class="mb-4">Editar Perfil</h2>
 
-  <form id="formCadastro">
+    <form id="formCadastro">
+      <div class="form-group mb-3">
+        <label for="nome" class="form-label">Nome completo</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+          <input type="text" id="nome" class="form-control" placeholder="Digite seu nome completo" required>
+        </div>
+      </div>
 
-    <div class="mb-3">
-      <label>Nome:</label>
-      <input type="text" id="nome" class="form-control" required>
-    </div>
+      <div class="form-group mb-3">
+        <label for="genero" class="form-label">Gênero</label>
+        <select id="genero" class="form-select" required>
+          <option value="">Selecione...</option>
+          <option value="Masculino">Masculino</option>
+          <option value="Feminino">Feminino</option>
+          <option value="Outro">Outro</option>
+          <option value="Prefiro não informar">Prefiro não informar</option>
+        </select>
+      </div>
 
-    <div class="mb-3">
-      <label for="genero">Gênero:</label>
-      <select id="genero" class="form-select" required>
-        <option value="">Selecione...</option>
-        <option value="Masculino">Masculino</option>
-        <option value="Feminino">Feminino</option>
-        <option value="Outro">Outro</option>
-        <option value="Prefiro não informar">Prefiro não informar</option>
-      </select>
-    </div>
+      <div class="form-group mb-3">
+        <label for="dataNascimento" class="form-label">Data de Nascimento</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+          <input type="tel" id="dataNascimento" class="form-control" maxlength="10" placeholder="dd/mm/aaaa" required>
+        </div>
+      </div>
 
-    <div class="mb-3">
-      <label>Data de Nascimento:</label>
-      <input type="tel" id="dataNascimento" class="form-control" maxlength="10" required>
-    </div>
+      <div class="form-group mb-3">
+        <label for="senha" class="form-label">Nova senha</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" id="senha" class="form-control" placeholder="********" required>
+        </div>
+      </div>
 
-    <div class="mb-3">
-      <label>Nova senha:</label>
-      <input type="password" id="senha" class="form-control" required>
-    </div>
+      <div class="form-group mb-3">
+        <label for="confirmaSenha" class="form-label">Confirme a senha</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-shield-lock-fill"></i></span>
+          <input type="password" id="confirmaSenha" class="form-control" placeholder="********" required>
+        </div>
+        <small id="senhaErro" class="text-danger d-none">As senhas não coincidem!</small>
+      </div>
 
-    <div class="mb-3">
-      <label>Confirme a Senha:</label>
-      <input type="password" id="confirmaSenha" class="form-control" required>
-      <small id="senhaErro" class="text-danger d-none">As senhas não coincidem!</small>
-    </div>
-
-    <div class="d-flex justify-content-between">
-      <a href="/PI-IV/templates/endereco/cadastrarEndCliente.html" class="btn btn-secondary">➕ Novo Endereço</a>
-      <button type="submit" class="btn btn-primary">Finalizar</button>
-    </div>
-
-  </form>
-</div>
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <a href="/PI-IV/templates/endereco/cadastrarEndCliente.html" class="btn btn-outline-secondary">
+          <i class="bi bi-geo-alt-fill"></i> Novo Endereço
+        </a>
+        <button type="submit" class="btn btn-primary shadow-sm">
+          <i class="bi bi-save"></i> Salvar Alterações
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
 
 <script src="/static/js/cliente/editarCliente.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
+``

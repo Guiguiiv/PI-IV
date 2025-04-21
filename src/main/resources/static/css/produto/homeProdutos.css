@@ -1,0 +1,98 @@
+
+body {
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== Navbar ===== */
+.navbar-dark .navbar-brand img {
+    transition: transform 0.2s ease-in-out;
+}
+.navbar-dark .navbar-brand img:hover {
+    transform: scale(1.1);
+}
+
+/* Container de opções (login/carrinho/config/saída) */
+.nav-options,
+.navbar .d-flex.align-items-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: auto;
+}
+
+/* Botões circulares (carrinho, config, sair) */
+.btn-circle {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-circle img,
+.btn-circle .bi {
+    width: 24px;
+    height: 24px;
+}
+
+/* Hover suave para botões claros */
+.btn-light:hover {
+    background-color: #e2e6ea;
+}
+
+/* ===== Títulos de Seção ===== */
+h2 {
+    color: #343a40;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2rem !important;
+}
+
+/* ===== Lista de Produtos ===== */
+#listaProdutos .card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#listaProdutos .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+#listaProdutos .card .card-img-top {
+    transition: transform 0.2s ease;
+}
+#listaProdutos .card .card-img-top:hover {
+    transform: scale(1.05);
+}
+
+/* ===== Modais ===== */
+.modal-content {
+    border-radius: 12px;
+}
+.modal-header {
+    background: linear-gradient(90deg, #0069d9, #0053ba);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    color: #fff;
+}
+.modal-header .modal-title {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+}
+#modalConfirmarSaida .modal-content {
+    border-radius: 8px;
+}
+
+/* ===== Botão de Compra no Modal ===== */
+#botaoComprarProduto {
+    transition: background-color 0.3s ease;
+}
+#botaoComprarProduto:hover {
+    background-color: #28a745cc;
+}

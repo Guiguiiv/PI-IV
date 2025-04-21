@@ -1,0 +1,70 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+body {
+    background: linear-gradient(135deg, #e3f2fd, #f8f9fa);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #343a40;
+}
+
+.navbar {
+    padding: 1rem;
+}
+
+.container-box {
+    max-width: 750px;
+    margin: 60px auto;
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+}
+
+.container-box:hover {
+    transform: scale(1.01);
+}
+
+h2 {
+    color: #0d6efd;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.section {
+    margin-bottom: 35px;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #dee2e6;
+    padding-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.list-group-item {
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+}
+
+.list-group-item:hover {
+    background-color: #e9f5ff;
+    color: #0d6efd;
+    transform: translateX(5px);
+}
+
+.list-group-item i {
+    transition: transform 0.3s;
+}
+
+.list-group-item:hover i {
+    transform: translateX(3px);
+}

@@ -1,150 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrinho de Compras</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sessão Cliente</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/cliente/sessaoCliente.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-primary p-3 shadow-sm">
-    <div class="container">
-        <a class="navbar-brand text-white" href="homeProdutos.html">
-            <img src="/static/imagens/carrinho-de-compras.png" alt="Logo da Loja" width="30">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand d-flex align-items-center" href="/PI-IV/templates/produto/homeProdutosLogado.html">
+            <img src="/static/imagens/user.png" alt="Logo da Loja" width="45" class="rounded-circle me-2 border border-light">
+            <span class="fw-semibold fs-4 text-white">Minha Conta</span>
         </a>
-        <div>
-            <a href="/PI-IV/templates/produto/homeProdutos.html" class="btn btn-outline-light">Voltar para Loja</a>
-        </div>
     </div>
 </nav>
 
-<!-- Conteúdo principal -->
-<div class="container mt-5">
-    <h2 class="text-center mb-4 text-primary">Carrinho de Compras</h2>
+<!-- Conteúdo -->
+<div class="container-box animate__animated animate__fadeIn">
+    <h2 class="text-center mb-4">Minha Conta</h2>
 
-    <!-- Tabela de Carrinho -->
-    <table class="table table-striped table-bordered table-hover">
-        <thead class="thead-dark bg-secondary text-white">
-        <tr>
-            <th>Produto</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Subtotal</th>
-            <th>Ações</th>
-        </tr>
-        </thead>
-        <tbody id="carrinhoTabela">
-        <!-- Os produtos serão carregados dinamicamente aqui -->
-        </tbody>
-    </table>
-
-    <!-- Seção de Frete e CEP -->
-    <div class="d-flex justify-content-between align-items-center mt-4">
-        <div class="w-50">
-            <label for="frete" class="form-label">Escolha uma opção de frete</label>
-            <select id="frete" class="form-select" onchange="calcularFrete()">
-                <option value="0">Selecione</option>
-                <option value="10">Frete Econômico (R$ 10,00)</option>
-                <option value="20">Frete Padrão (R$ 20,00)</option>
-                <option value="30">Frete Expresso (R$ 30,00)</option>
-            </select>
-        </div>
-
-        <div class="w-50">
-            <label for="cep" class="form-label">Digite seu CEP</label>
-            <input type="text" class="form-control" id="cep" placeholder="00000-000" maxlength="10" oninput="mascaraCEP(this)">
+    <div class="section">
+        <div class="section-title"><i class="fas fa-user-circle me-2 text-primary"></i>Perfil</div>
+        <div class="list-group">
+            <a href="/PI-IV/templates/cliente/logado/editarCliente.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Editar perfil
+                <i class="fas fa-angle-right text-primary"></i>
+            </a>
         </div>
     </div>
 
-    <!-- Total e Finalização -->
-    <div class="text-end mt-4">
-        <h4>Total: R$ <span id="totalCompra">0.00</span></h4>
-        <h5>Frete: R$ <span id="valorFrete">0.00</span></h5>
-        <button class="btn btn-success mt-3" onclick="finalizarCompra()">Finalizar Compra</button>
+    <div class="section">
+        <div class="section-title"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Endereços</div>
+        <div class="list-group">
+            <a href="/PI-IV/templates/endereco/cadastrarEndCliente.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Cadastrar novo endereço
+                <i class="fas fa-plus-circle text-success"></i>
+            </a>
+            <a href="/PI-IV/templates/endereco/editarEndereco.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                Editar endereços salvos
+                <i class="fas fa-edit text-warning"></i>
+            </a>
+        </div>
     </div>
 </div>
 
-<script>
-    // Função para aplicar a máscara ao CEP
-    function mascaraCEP(input) {
-        var cep = input.value.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
-        if (cep.length <= 5) {
-            input.value = cep.replace(/(\d{5})(\d{0,3})/, '$1-$2'); // Aplica a máscara 00000-000
-        } else {
-            input.value = cep.replace(/(\d{5})(\d{3})/, '$1-$2'); // Aplica a máscara 00000-000
-        }
-    }
-
-    // Função para carregar os produtos do carrinho
-    function carregarCarrinho() {
-        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
-        let tabela = document.getElementById("carrinhoTabela");
-        let totalCompra = 0;
-        tabela.innerHTML = "";
-
-        carrinho.forEach((produto, index) => {
-            let subtotal = produto.preco * produto.quantidade;
-            totalCompra += subtotal;
-
-            tabela.innerHTML += `
-                    <tr>
-                        <td><img src="${produto.imagem}" width="50" class="rounded"> ${produto.nome}</td>
-                        <td>R$ ${produto.preco.toFixed(2)}</td>
-                        <td>
-                            <input type="number" value="${produto.quantidade}" min="1" class="form-control" style="width: 80px;" onchange="alterarQuantidade(${index}, this.value)">
-                        </td>
-                        <td>R$ ${subtotal.toFixed(2)}</td>
-                        <td>
-                            <button class="btn btn-danger btn-sm" onclick="removerDoCarrinho(${index})">Remover</button>
-                        </td>
-                    </tr>
-                `;
-        });
-
-        document.getElementById("totalCompra").innerText = totalCompra.toFixed(2);
-        calcularFrete();  // Atualiza o valor do frete sempre que o carrinho é carregado
-    }
-
-    // Função para calcular o frete
-    function calcularFrete() {
-        let freteSelecionado = parseFloat(document.getElementById("frete").value) || 0;
-        let totalCompra = parseFloat(document.getElementById("totalCompra").innerText);
-        let totalFinal = totalCompra + freteSelecionado;
-
-        // Atualiza o valor do frete e o total
-        document.getElementById("valorFrete").innerText = freteSelecionado.toFixed(2);
-        document.getElementById("totalCompra").innerText = totalFinal.toFixed(2);
-    }
-
-    // Função para alterar a quantidade do produto
-    function alterarQuantidade(index, quantidade) {
-        let carrinho = JSON.parse(localStorage.getItem("carrinho"));
-        carrinho[index].quantidade = parseInt(quantidade);
-        localStorage.setItem("carrinho", JSON.stringify(carrinho));
-        carregarCarrinho();
-    }
-
-    // Função para remover um produto do carrinho
-    function removerDoCarrinho(index) {
-        let carrinho = JSON.parse(localStorage.getItem("carrinho"));
-        carrinho.splice(index, 1);
-        localStorage.setItem("carrinho", JSON.stringify(carrinho));
-        carregarCarrinho();
-    }
-
-    // Função para finalizar a compra
-    function finalizarCompra() {
-        alert("Compra finalizada com sucesso!");
-        localStorage.removeItem("carrinho");
-        carregarCarrinho();
-    }
-
-    // Carrega o carrinho quando a página é carregada
-    document.addEventListener("DOMContentLoaded", carregarCarrinho);
-</script>
-
+<!-- Scripts -->
+<script src="/static/js/cliente/cadastrarCliente.js"></script>
+<script src="/static/js/cliente/editarCliente.js"></script>
+<script src="/static/js/endereco/cadastroEndereco.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -1,0 +1,74 @@
+/* loginCliente.css */
+
+:root {
+    --primary: #0d6efd;
+    --primary-dark: #0b5ed7;
+    --light: #0d6efd;
+    --gray-200: #e9ecef;
+}
+
+/* Fundo geral */
+body {
+    background-color: var(--light);
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Navbar com gradiente */
+.bg-gradient-primary {
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+}
+
+/* Background de login full-screen */
+.login-bg {
+    background: url('/static/imagens/login-bg.jpg') center/cover no-repeat;
+    min-height: calc(100vh - 72px);
+    padding: 2rem;
+}
+
+/* Cartão de login */
+.login-card {
+    background-color: #fff;
+    max-width: 380px;
+    width: 100%;
+    border-radius: 1rem;
+}
+
+/* Inputs com ícones */
+.input-group .form-control {
+    border-radius: 0 .5rem .5rem 0;
+}
+.input-group-text {
+    border-radius: .5rem 0 0 .5rem;
+    border: 1px solid var(--gray-200);
+}
+
+/* Botão de login gradiente */
+.btn-gradient-primary {
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    border: none;
+    color: #fff;
+    transition: background 0.3s ease;
+}
+.btn-gradient-primary:hover,
+.btn-gradient-primary:focus {
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+}
+
+/* Botão cancelar */
+.btn-outline-secondary {
+    border-color: var(--gray-200);
+    color: #6c757d;
+}
+.btn-outline-secondary:hover {
+    background-color: var(--gray-200);
+}
+
+/* Textos do cartão */
+.login-card h2,
+.login-card p {
+    margin: 0;
+}
+.login-card p {
+    font-size: 0.9rem;
+}

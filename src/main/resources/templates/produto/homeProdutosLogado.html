@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -5,102 +6,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loja Virtual</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <!-- Ícones da biblioteca Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  <style>
-    /* Ajustando a navbar para empurrar os itens para o canto direito */
-    .navbar .container {
-      display: flex;
-      justify-content: space-between; /* Espaçamento máximo entre os itens */
-      align-items: center;
-    }
-
-    /* Ajustando a parte de saudação e botões para colar na borda direita */
-    .navbar .d-flex {
-      margin-left: auto;
-      position: absolute; /* Torna a posição dos itens independente */
-      right: 0; /* Coloca no canto direito */
-    }
-  </style>
+  <link rel="stylesheet" href="/static/css/produto/homeProdutos.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-primary p-3">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm p-3">
   <div class="container">
-    <a class="navbar-brand text-white" href="#">
-      <img src="/static/imagens/compras-online.png" alt="Logo da Loja" width="30">
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <img src="/static/imagens/compras-online.png" alt="Logo da Loja" width="35" class="me-2">
+      <span class="fw-bold text-white">Loja Virtual</span>
     </a>
-    <div class="d-flex align-items-center ms-auto">
-      <!-- Saudação do cliente logado -->
-      <span id="saudacaoCliente" class="text-white fw-bold me-4"></span>
+    <div class="nav-options">
+      <span id="saudacaoCliente" class="text-white fw-semibold"></span>
 
-      <!-- Carrinho -->
-      <a href="/PI-IV/templates/produto/carrinhoProdutos.html" class="btn btn-light me-3">
-        <i class="bi bi-cart-fill" style="font-size: 24px;"></i>
+      <a href="/PI-IV/templates/produto/carrinhoProdutos.html" class="btn btn-light btn-circle" title="Carrinho">
+        <i class="bi bi-cart-fill fs-5"></i>
       </a>
 
-      <!-- Endereço -->
-      <a href="/PI-IV/templates/endereco/sessaoEndereco.html" class="btn btn-light me-3">
-        <img src="/static/imagens/config.gif" alt="Configuraões" width="35">
+      <a href="/PI-IV/templates/endereco/sessaoEndereco.html" class="btn btn-light btn-circle" title="Configurações">
+        <img src="/static/imagens/config.gif" alt="Configurações" width="24">
       </a>
 
-      <!-- Botão de Sair -->
-      <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalConfirmarSaida">
-        <img src="/static/imagens/sair.gif" alt="Sair" width="35">
+      <button class="btn btn-light btn-circle" data-bs-toggle="modal" data-bs-target="#modalConfirmarSaida" title="Sair">
+        <img src="/static/imagens/sair.gif" alt="Sair" width="24">
       </button>
     </div>
   </div>
 </nav>
 
 <!-- Lista de Produtos -->
-<div class="container mt-5">
-  <h2 class="mb-4 text-center text-uppercase">Produtos</h2>
+<section class="container mt-5">
+  <h2 class="text-center text-uppercase mb-4">Produtos</h2>
   <div id="listaProdutos" class="row row-cols-1 row-cols-md-3 g-4">
     <!-- Produtos serão carregados aqui -->
   </div>
-</div>
+</section>
 
 <!-- Modal de Visualização -->
 <div class="modal fade" id="modalVisualizarProduto" tabindex="-1" aria-labelledby="modalVisualizarProdutoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <!-- Cabeçalho do Modal -->
-      <div class="modal-header bg-gradient text-white">
-        <h5 class="modal-title mx-auto" id="produtoNomeModal"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      <div class="modal-header">
+        <h5 class="modal-title mx-auto text-white" id="produtoNomeModal"></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
-      <!-- Corpo do Modal -->
       <div class="modal-body text-center">
-        <!-- Imagem Principal -->
-        <div class="text-center mb-4">
-          <img id="produtoImagemModal" class="img-fluid shadow-lg rounded" style="max-height: 150px;" alt="Imagem do Produto">
+        <div class="mb-4">
+          <img id="produtoImagemModal" class="img-fluid rounded shadow-sm" style="max-height: 200px;" alt="Imagem do Produto">
         </div>
 
-        <!-- Carrossel de Imagens -->
         <div id="carouselExampleControls" class="carousel slide mb-4" data-bs-ride="carousel">
-          <div class="carousel-inner" id="carrosselImagens">
-            <!-- As imagens adicionais serão carregadas aqui -->
-          </div>
+          <div class="carousel-inner" id="carrosselImagens"></div>
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="carousel-control-prev-icon"></span>
             <span class="visually-hidden">Anterior</span>
           </button>
           <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="carousel-control-next-icon"></span>
             <span class="visually-hidden">Próximo</span>
           </button>
         </div>
 
-        <!-- Detalhes do Produto -->
         <div class="d-flex justify-content-between mb-3">
           <p><strong>Quantidade disponível:</strong> <span id="produtoQuantidadeModal"></span></p>
-          <p><strong>Preço:</strong> <span id="produtoPrecoModal"></span></p>
+          <p><strong>Preço:</strong> R$ <span id="produtoPrecoModal"></span></p>
         </div>
 
-        <!-- Botão de Compra -->
         <button class="btn btn-success px-4 py-2" id="botaoComprarProduto">
-          <i class="bi bi-cart-plus"></i> Adicionar ao Carrinho
+          <i class="bi bi-cart-plus me-2"></i>Adicionar ao Carrinho
         </button>
       </div>
     </div>
@@ -126,9 +101,8 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/static/js/produto/homeProdutos.js"></script>
 <script src="/static/js/cliente/carregarLogin.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

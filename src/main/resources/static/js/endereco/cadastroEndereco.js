@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (resposta.ok) {
                 alert("Endereço cadastrado com sucesso!");
-                window.location.href = "/templates/cliente/naoLogado/loginCliente.html";
+                window.location.href = "/PI-IV/templates/cliente/naoLogado/loginCliente.html";
             } else {
                 const erro = await resposta.text();
                 alert("Erro ao cadastrar: " + erro);

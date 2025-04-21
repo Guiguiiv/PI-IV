@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.removeItem("clienteLogado");
             }
             // Redireciona para a tela de produtos
-            window.location.href = "/templates/produto/homeProdutosLogado.html?_ijt=uq0f7hh9gkd9jpge6fpep53sqe";
+            window.location.href = "/PI-IV/templates/produto/homeProdutosLogado.html";
         });
     }
 });

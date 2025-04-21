@@ -1,5 +1,6 @@
 package com.PI_IV.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,6 +46,8 @@ public class Endereco {
     private boolean principal;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente")
+    @JoinColumn(name = "cliente_id")
+    @JsonBackReference
     private Cliente cliente;
+
 }

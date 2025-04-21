@@ -1,41 +1,31 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns="http://www.w3.org/1999/html">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sessao Cliente</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sessão Cliente</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <style>
     body {
-        background: #f8f9fa;
+      background: #f8f9fa;
     }
-
-    .login-container {
-        max-width: 800px;
-        margin: 80px auto;
-        background: white;
-        padding: 30px;
-        border-radius: 15px;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    .container-box {
+      max-width: 800px;
+      margin: 80px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     }
-
     h2 {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #0d6efd;
+      text-align: center;
+      margin-bottom: 30px;
+      color: #0d6efd;
     }
-
-    .button-group {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .navbar-brand img {
-        margin-right: 8px;
-    }
-
-    .navbar {
-        border-radius: 0 0 10px 10px;
+    .section-title {
+      font-weight: bold;
+      margin-top: 30px;
+      color: #495057;
     }
   </style>
 </head>
@@ -45,23 +35,38 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-primary p-3 shadow-sm">
   <div class="container">
     <a class="navbar-brand d-flex align-items-center text-white" href="/templates/produto/homeProdutos.html">
-      <img src="/static/imagens/carrinho-de-compras.png" alt="Logo da Loja" width="30">
+      <img src="/static/imagens/carrinho-de-compras.png" alt="Logo da Loja" width="30" class="me-2">Minha Conta
     </a>
   </div>
 </nav>
 
-<div class="login-container">
-  <h2>Meu Perfil</h2>
+<div class="container-box">
+  <h2>Minha Conta</h2>
 
-  <div class="list-group mt-4">
-    <a href="/templates/cliente/logado/editarCliente.html" class="list-group-item list-group-item-action">Editar Perfil</a>
-    <a href="/templates/endereco/cadastrarEndCliente.html" class="list-group-item list-group-item-action">Cadastrar Endereço</a>
-    <a href="/templates_ENDERECO/" class="list-group-item list-group-item-action">Editar Endereço</a>
+  <!-- Dados Pessoais -->
+  <div class="section-title">Perfil</div>
+  <div class="list-group">
+    <a href="/PI-IV/templates/cliente/logado/editarCliente.html" class="list-group-item list-group-item-action">
+      Editar perfil
+    </a>
   </div>
 
+  <!-- Endereços -->
+  <div class="section-title">Endereços</div>
+  <div class="list-group">
+    <a href="/PI-IV/templates/endereco/cadastrarEndCliente.html" class="list-group-item list-group-item-action">
+      Cadastrar novo endereço de entrega
+    </a>
+    <a href="/PI-IV/templates/endereco/editarEndereco.html" class="list-group-item list-group-item-action">
+      Editar endereços salvos
+    </a>
+  </div>
 </div>
-<script src="/static/js/usuario/cadastroUsuario.js"></script>
-<script src= "/static/js/endereco/cadastroEndereco.js"></script>
+
+<!-- Scripts -->
+<script src="/static/js/cliente/cadastrarCliente.js"></script>
+<script src="/static/js/cliente/editarCliente.js"></script>
+<script src="/static/js/endereco/cadastroEndereco.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

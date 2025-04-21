@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const clienteAtualizadoResposta = await resposta.json();
                 localStorage.setItem("clienteLogado", JSON.stringify(clienteAtualizadoResposta));
 
-                window.location.href = "sessaoEndereco.html";
+                window.location.href = "/PI-IV/templates/endereco/sessaoEndereco.html";
 
             } else {
                 const erro = await resposta.text();

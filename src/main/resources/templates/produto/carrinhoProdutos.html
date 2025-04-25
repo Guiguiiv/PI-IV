@@ -1,58 +1,150 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Sessão Cliente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho de Compras</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/produto/carrinho.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/cliente/sessaoCliente.css">
 </head>
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-    <div class="container d-flex justify-content-between align-items-center">
-        <a class="navbar-brand d-flex align-items-center" href="/PI-IV/templates/produto/homeProdutosLogado.html">
-            <img src="/static/imagens/user.png" alt="Logo da Loja" width="45" class="rounded-circle me-2 border border-light">
-            <span class="fw-semibold fs-4 text-white">Minha Conta</span>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary p-3 shadow">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2 text-white" href="homeProdutosLogado.html">
+            <img src="/static/imagens/carrinho-de-compras.png" alt="Logo" width="30"> Minha Loja
         </a>
+        <div>
+            <a href="homeProdutosLogado.html" class="btn btn-light">
+                <i class="fas fa-arrow-left me-1"></i> Voltar para Loja
+            </a>
+        </div>
     </div>
 </nav>
 
 <!-- Conteúdo -->
-<div class="container-box animate__animated animate__fadeIn">
-    <h2 class="text-center mb-4">Minha Conta</h2>
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-4">Seu Carrinho</h2>
 
-    <div class="section">
-        <div class="section-title"><i class="fas fa-user-circle me-2 text-primary"></i>Perfil</div>
-        <div class="list-group">
-            <a href="/PI-IV/templates/cliente/logado/editarCliente.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                Editar perfil
-                <i class="fas fa-angle-right text-primary"></i>
-            </a>
+    <!-- Tabela do Carrinho -->
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle shadow-sm">
+            <thead class="table-primary text-center">
+            <tr>
+                <th>Produto</th>
+                <th>Preço</th>
+                <th>Qtd</th>
+                <th>Subtotal</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody id="carrinhoTabela"></tbody>
+        </table>
+    </div>
+
+    <!-- Frete + CEP -->
+    <div class="row g-3 mt-4">
+        <div class="col-md-6">
+            <label for="frete" class="form-label">Opção de Frete</label>
+            <select id="frete" class="form-select" onchange="calcularFrete()">
+                <option value="0">Selecione</option>
+                <option value="10">Econômico (R$ 10,00)</option>
+                <option value="20">Padrão (R$ 20,00)</option>
+                <option value="30">Expresso (R$ 30,00)</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="cep" class="form-label">CEP</label>
+            <input type="text" class="form-control" id="cep" placeholder="00000-000" maxlength="10" oninput="mascaraCEP(this)">
         </div>
     </div>
 
-    <div class="section">
-        <div class="section-title"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Endereços</div>
-        <div class="list-group">
-            <a href="/PI-IV/templates/endereco/cadastrarEndCliente.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                Cadastrar novo endereço
-                <i class="fas fa-plus-circle text-success"></i>
-            </a>
-            <a href="/PI-IV/templates/endereco/editarEndereco.html" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                Editar endereços salvos
-                <i class="fas fa-edit text-warning"></i>
-            </a>
-        </div>
+    <!-- Total -->
+    <div class="text-end mt-4">
+        <h4>Total: <strong>R$ <span id="totalCompra">0.00</span></strong></h4>
+        <h5>Frete: R$ <span id="valorFrete">0.00</span></h5>
+        <button class="btn btn-success btn-lg mt-3" onclick="finalizarCompra()">
+            <i class="fas fa-check me-1"></i> Finalizar Compra
+        </button>
     </div>
 </div>
 
 <!-- Scripts -->
-<script src="/static/js/cliente/cadastrarCliente.js"></script>
-<script src="/static/js/cliente/editarCliente.js"></script>
-<script src="/static/js/endereco/cadastroEndereco.js"></script>
+<script>
+    function mascaraCEP(input) {
+        var cep = input.value.replace(/\D/g, '');
+        if (cep.length <= 5) {
+            input.value = cep.replace(/(\d{5})(\d{0,3})/, '$1-$2');
+        } else {
+            input.value = cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+        }
+    }
+
+    function carregarCarrinho() {
+        let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+        let tabela = document.getElementById("carrinhoTabela");
+        let totalCompra = 0;
+        tabela.innerHTML = "";
+
+        carrinho.forEach((produto, index) => {
+            let subtotal = produto.preco * produto.quantidade;
+            totalCompra += subtotal;
+
+            tabela.innerHTML += `
+                <tr>
+                    <td class="text-start"><img src="${produto.imagem}" width="50" class="rounded me-2"> ${produto.nome}</td>
+                    <td>R$ ${produto.preco.toFixed(2)}</td>
+                    <td>
+                        <input type="number" value="${produto.quantidade}" min="1" class="form-control text-center" style="width: 80px;" onchange="alterarQuantidade(${index}, this.value)">
+                    </td>
+                    <td>R$ ${subtotal.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="removerDoCarrinho(${index})">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("totalCompra").innerText = totalCompra.toFixed(2);
+        calcularFrete();
+    }
+
+    function calcularFrete() {
+        let freteSelecionado = parseFloat(document.getElementById("frete").value) || 0;
+        let totalCompra = parseFloat(document.getElementById("totalCompra").innerText);
+        let totalFinal = totalCompra + freteSelecionado;
+
+        document.getElementById("valorFrete").innerText = freteSelecionado.toFixed(2);
+        document.getElementById("totalCompra").innerText = totalFinal.toFixed(2);
+    }
+
+    function alterarQuantidade(index, quantidade) {
+        let carrinho = JSON.parse(localStorage.getItem("carrinho"));
+        carrinho[index].quantidade = parseInt(quantidade);
+        localStorage.setItem("carrinho", JSON.stringify(carrinho));
+        carregarCarrinho();
+    }
+
+    function removerDoCarrinho(index) {
+        let carrinho = JSON.parse(localStorage.getItem("carrinho"));
+        carrinho.splice(index, 1);
+        localStorage.setItem("carrinho", JSON.stringify(carrinho));
+        carregarCarrinho();
+    }
+
+    function finalizarCompra() {
+        alert("Compra finalizada com sucesso!");
+        localStorage.removeItem("carrinho");
+        carregarCarrinho();
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarCarrinho);
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

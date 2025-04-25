@@ -1,0 +1,153 @@
+/* Estilo de fundo para a página */
+body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(-45deg, #c3dafe, #f3e8ff, #f0fdf4, #fef9c3);
+    background-size: 400% 400%;
+    animation: gradientMove 15s ease infinite;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Animação de movimento de fundo */
+@keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Estilo da Navbar */
+.navbar {
+    padding: 1rem 0;
+    background-color: rgba(13, 110, 253, 0.9); /* Azul com leve transparência */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil para profundidade */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.navbar-brand img {
+    margin-right: 10px;
+    width: 35px;
+    border-radius: 50%;
+}
+
+/* Estilo do Formulário */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    padding: 40px 15px;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px); /* Deixar o fundo mais suave */
+}
+
+/* Efeito de "vidro fosco" */
+.glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px); /* Maior desfoque */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Melhor contraste */
+    color: #333;
+}
+
+/* Título do formulário */
+h2 {
+    text-align: center;
+    font-weight: bold;
+    color: #0d6efd;
+    margin-bottom: 30px;
+    font-size: 2rem; /* Maior tamanho para mais destaque */
+}
+
+/* Estilo das labels */
+.form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Estilo dos campos de input */
+.input-group-text {
+    background-color: #e7f1ff;
+    border-radius: 10px 0 0 10px;
+    color: #0d6efd;
+}
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    padding: 14px;
+    background-color: #f8f9fa; /* Cor suave no fundo */
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: #0d6efd;
+    background-color: #ffffff; /* Mudança suave no fundo */
+}
+
+/* Botões */
+.btn-primary,
+.btn-outline-secondary {
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #e7f1ff;
+    color: #0d6efd;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #e7f1ff;
+    color: #0d6efd;
+    transform: translateY(-1px);
+}
+
+/* Mensagem de erro */
+#senhaErro {
+    font-size: 0.85rem;
+    margin-top: 5px;
+    color: #dc3545;
+}
+
+/* Estilo de responsividade para dispositivos menores */
+@media (max-width: 768px) {
+    .form-container {
+        margin: 20px;
+        padding: 30px;
+    }
+    h2 {
+        font-size: 1.75rem;
+    }
+    .btn-primary,
+    .btn-outline-secondary {
+        padding: 10px 20px;
+    }
+}

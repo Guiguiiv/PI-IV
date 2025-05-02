@@ -15,35 +15,36 @@ public class ClienteService {
     private final InterfaceCliente repository;
     private final PasswordEncoder passwordEncoder;
 
-    // Injeção de dependências
+    // Construtor com injeção de dependência e inicialização do codificador de senha
     public ClienteService(InterfaceCliente repository) {
         this.repository = repository;
-        this.passwordEncoder = new BCryptPasswordEncoder(); // Para criptografar senhas
+        this.passwordEncoder = new BCryptPasswordEncoder(); // Codificador para criptografar senhas
     }
 
-    // Listar todos os clientes
+    // Retorna a lista de todos os clientes cadastrados
     public List<Cliente> listarClientes() {
         return (List<Cliente>) repository.findAll();
     }
 
-    // Criar um novo cliente
+    // Cria um novo cliente com a senha criptografada
     public Cliente criarCliente(Cliente cliente) {
-        cliente.setSenha(passwordEncoder.encode(cliente.getSenha()));
+        cliente.setSenha(passwordEncoder.encode(cliente.getSenha())); // Criptografa a senha
         return repository.save(cliente);
     }
 
-    // Editar cliente (apenas campos permitidos)
+    // Edita os dados de um cliente existente
     public Cliente editarCliente(Cliente clienteAtualizado) {
         Optional<Cliente> clienteOpt = repository.findById(clienteAtualizado.getId());
 
         if (clienteOpt.isPresent()) {
             Cliente cliente = clienteOpt.get();
 
+            // Atualiza apenas os campos permitidos
             cliente.setNome(clienteAtualizado.getNome());
             cliente.setDataNascimento(clienteAtualizado.getDataNascimento());
             cliente.setGenero(clienteAtualizado.getGenero());
 
-            // Atualiza senha se enviada
+            // Atualiza a senha apenas se uma nova senha for enviada
             if (clienteAtualizado.getSenha() != null && !clienteAtualizado.getSenha().isEmpty()) {
                 cliente.setSenha(passwordEncoder.encode(clienteAtualizado.getSenha()));
             }
@@ -51,21 +52,26 @@ public class ClienteService {
             return repository.save(cliente);
         }
 
-        return null;
+        return null; // Cliente não encontrado
     }
 
-    // Buscar cliente por ID
+    // Busca um cliente pelo ID
     public Optional<Cliente> buscarClientePorId(int id) {
         return repository.findById(id);
     }
 
-    // Buscar cliente por CPF
+    // Busca um cliente pelo CPF
     public Optional<Cliente> buscarClientePorCpf(String cpf) {
         return repository.findByCpf(cpf);
     }
 
-    // Buscar cliente por Email
+    // Busca um cliente pelo e-mail
     public Optional<Cliente> buscarClientePorEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    // Valida se a senha fornecida bate com a senha criptografada do banco
+    public boolean validarSenha(String senhaDigitada, String senhaCriptografada) {
+        return passwordEncoder.matches(senhaDigitada, senhaCriptografada);
     }
 }

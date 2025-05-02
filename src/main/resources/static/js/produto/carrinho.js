@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     carregarCarrinho();
+    document.getElementById("frete").addEventListener("change", calcularFrete);
+    document.getElementById("cep").addEventListener("input", (e) => mascaraCEP(e.target));
+    document.getElementById("finalizarCompraBtn").addEventListener("click", finalizarCompra);
 });
 
 function mascaraCEP(input) {
@@ -21,34 +24,39 @@ function carregarCarrinho() {
         let subtotal = produto.preco * produto.quantidade;
         totalCompra += subtotal;
 
-        tabela.innerHTML += `
-            <tr>
-                <td class="text-start"><img src="${produto.imagem}" width="50" class="rounded me-2"> ${produto.nome}</td>
-                <td>R$ ${produto.preco.toFixed(2)}</td>
-                <td>
-                    <input type="number" value="${produto.quantidade}" min="1" class="form-control text-center" style="width: 80px;" onchange="alterarQuantidade(${index}, this.value)">
-                </td>
-                <td>R$ ${subtotal.toFixed(2)}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" onclick="removerDoCarrinho(${index})">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            </tr>
+        let row = document.createElement("tr");
+        row.innerHTML = `
+            <td class="text-start"><img src="${produto.imagem}" width="50" class="rounded me-2"> ${produto.nome}</td>
+            <td>R$ ${produto.preco.toFixed(2)}</td>
+            <td>
+                <input type="number" value="${produto.quantidade}" min="1" class="form-control text-center quantidade" style="width: 80px;" data-index="${index}">
+            </td>
+            <td>R$ ${subtotal.toFixed(2)}</td>
+            <td>
+                <button class="btn btn-danger btn-sm remover" data-index="${index}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </td>
         `;
+        tabela.appendChild(row);
     });
 
     document.getElementById("totalCompra").innerText = totalCompra.toFixed(2);
     calcularFrete();
-}
 
-function calcularFrete() {
-    let freteSelecionado = parseFloat(document.getElementById("frete").value) || 0;
-    let totalCompra = parseFloat(document.getElementById("totalCompra").innerText);
-    let totalFinal = totalCompra + freteSelecionado;
+    document.querySelectorAll(".quantidade").forEach(input => {
+        input.addEventListener("change", e => {
+            const index = parseInt(e.target.dataset.index);
+            alterarQuantidade(index, e.target.value);
+        });
+    });
 
-    document.getElementById("valorFrete").innerText = freteSelecionado.toFixed(2);
-    document.getElementById("totalCompra").innerText = totalFinal.toFixed(2);
+    document.querySelectorAll(".remover").forEach(botao => {
+        botao.addEventListener("click", e => {
+            const index = parseInt(e.currentTarget.dataset.index);
+            removerDoCarrinho(index);
+        });
+    });
 }
 
 function alterarQuantidade(index, quantidade) {
@@ -65,23 +73,29 @@ function removerDoCarrinho(index) {
     carregarCarrinho();
 }
 
+function calcularFrete() {
+    let freteSelecionado = parseFloat(document.getElementById("frete").value) || 0;
+    let totalCompra = 0;
 
-// VERIFICAÇÃO DE LOGIN AO FINALIZAR COMPRA
+    let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+    carrinho.forEach(produto => {
+        totalCompra += produto.preco * produto.quantidade;
+    });
+
+    document.getElementById("valorFrete").innerText = freteSelecionado.toFixed(2);
+    document.getElementById("totalCompra").innerText = (totalCompra + freteSelecionado).toFixed(2);
+}
+
 function finalizarCompra() {
     const cliente = JSON.parse(localStorage.getItem("clienteLogado"));
-    console.log("Cliente logado:", cliente); // Verifique no console se o cliente está correto
+    console.log("Cliente logado:", cliente);
 
-    // Verifique se o cliente está logado
     if (!cliente) {
         alert("Você precisa estar logado para finalizar a compra.");
-         window.location.href = "/PI-IV/templates/cliente/naoLogado/loginCliente.html"; // Redireciona para a página de login
+        window.location.href = "/PI-IV/templates/cliente/naoLogado/loginCliente.html";
     } else {
         alert("Compra finalizada com sucesso!");
-
-        // Limpa o carrinho após a compra
         localStorage.removeItem("carrinho");
-
-        // Redireciona para uma página de sucesso (pode ser uma página de confirmação de pedido)
+        window.location.href = "/PI-IV/templates/pedido/confirmacao.html";
     }
-
 }

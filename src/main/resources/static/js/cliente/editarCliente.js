@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
             senha
         };
 
+
         try {
             const resposta = await fetch(`http://localhost:8080/cliente/${clienteLogado.id}`, {
                 method: "PUT",

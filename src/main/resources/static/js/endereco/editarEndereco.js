@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let endereco = null;
 
     try {
-        const response = await fetch(`http://localhost:8080/enderecos/${idCliente}`);
+        const response = await fetch(`http://localhost:8080/endereco/${idCliente}`);
         if (!response.ok) {
             throw new Error("Erro ao buscar endereço.");
         }
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/enderecos/${endereco.id}`, {
+            const response = await fetch(`http://localhost:8080/endereco/${endereco.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"

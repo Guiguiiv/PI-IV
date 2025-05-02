@@ -1,10 +1,11 @@
+/* ===== Global Styles ===== */
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(-45deg, #c3dafe, #f3e8ff, #f0fdf4, #fef9c3);
     background-size: 400% 400%;
     animation: gradientMove 15s ease infinite;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 @keyframes gradientMove {
@@ -13,6 +14,7 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+/* ===== Navbar ===== */
 .navbar {
     padding: 1rem 2rem;
     background: linear-gradient(90deg, #0016e4, #0010c5);
@@ -27,6 +29,11 @@ body {
     transition: color 0.3s;
 }
 
+.navbar-brand:hover {
+    color: #dbeafe;
+}
+
+/* ===== Form Container ===== */
 .form-wrapper {
     display: flex;
     justify-content: center;
@@ -35,30 +42,27 @@ body {
     padding: 40px 15px;
 }
 
-.form-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 40px;
+.container-box {
+    background-color: #ffffffee;
+    padding: 40px 30px;
     border-radius: 20px;
+    max-width: 700px;
+    width: 100%;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    background-color: #ffffff;
-    transition: all 0.3s ease;
-}
-
-.glass {
-    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
+    transition: all 0.3s ease-in-out;
 }
 
+/* ===== Headings ===== */
 h2 {
     text-align: center;
     font-weight: bold;
     color: #0d6efd;
     margin-bottom: 30px;
+    font-size: 2rem;
 }
 
+/* ===== Form Elements ===== */
 .form-label {
     font-weight: 600;
     color: #333;
@@ -73,26 +77,43 @@ h2 {
 .form-control,
 .form-select {
     border-radius: 10px;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    background-color: #f8f9fa;
     transition: all 0.3s ease;
 }
 
 .form-control:focus,
 .form-select:focus {
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    background-color: #fff;
     border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
 }
 
+/* ===== Buttons ===== */
 .btn-primary,
 .btn-outline-secondary {
-    border-radius: 12px;
     padding: 12px 24px;
     font-weight: 600;
+    border-radius: 12px;
     transition: all 0.3s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+    color: #fff;
 }
 
 .btn-primary:hover {
     background-color: #0b5ed7;
     transform: translateY(-1px);
+}
+
+.btn-outline-secondary {
+    border: 1px solid #ccc;
+    background-color: transparent;
+    color: #333;
 }
 
 .btn-outline-secondary:hover {
@@ -101,7 +122,20 @@ h2 {
     transform: translateY(-1px);
 }
 
-#senhaErro {
-    font-size: 0.85rem;
-    margin-top: 5px;
+/* ===== Responsividade ===== */
+@media (max-width: 576px) {
+    .container-box {
+        padding: 30px 20px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .navbar {
+        padding: 1rem;
+        text-align: center;
+    }
 }
+
+

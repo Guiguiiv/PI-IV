@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .then(res => res.json())
                 .then(data => {
                     if (!data.erro) {
-                        document.getElementById("rua").value = data.logradouro;
+                        document.getElementById("logradouro").value = data.logradouro;
                         document.getElementById("bairro").value = data.bairro;
                         document.getElementById("cidade").value = data.localidade;
                         document.getElementById("estado").value = data.uf;

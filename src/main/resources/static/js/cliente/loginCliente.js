@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 localStorage.setItem("clienteLogado", JSON.stringify(cliente));
 
                 // Redireciona para página de produtos (ou outra página protegida)
-                window.location.href = "/PI-IV/templates/produto/homeProdutosLogado.html";
+                window.location.href = "/PI-IV/templates/produto/carrinhoLogado.html";
 
 
             } else {

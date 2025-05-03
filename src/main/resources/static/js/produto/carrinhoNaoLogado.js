@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function mascaraCEP(input) {
-    var cep = input.value.replace(/\D/g, '');
+    var cep = input.value.replace(/\D/g, ''); // Remove qualquer coisa que não seja número
     if (cep.length <= 5) {
         input.value = cep.replace(/(\d{5})(\d{0,3})/, '$1-$2');
     } else {
@@ -44,6 +44,7 @@ function carregarCarrinho() {
     document.getElementById("totalCompra").innerText = totalCompra.toFixed(2);
     calcularFrete();
 
+    // Adicionando eventos aos inputs de quantidade
     document.querySelectorAll(".quantidade").forEach(input => {
         input.addEventListener("change", e => {
             const index = parseInt(e.target.dataset.index);
@@ -51,6 +52,7 @@ function carregarCarrinho() {
         });
     });
 
+    // Adicionando eventos aos botões de remover
     document.querySelectorAll(".remover").forEach(botao => {
         botao.addEventListener("click", e => {
             const index = parseInt(e.currentTarget.dataset.index);
@@ -87,15 +89,8 @@ function calcularFrete() {
 }
 
 function finalizarCompra() {
-    const cliente = JSON.parse(localStorage.getItem("clienteLogado"));
-    console.log("Cliente logado:", cliente);
-
-    if (!cliente) {
         alert("Você precisa estar logado para finalizar a compra.");
-        window.location.href = "/PI-IV/templates/cliente/naoLogado/loginCliente.html";
-    } else {
-        alert("Compra finalizada com sucesso!");
-        localStorage.removeItem("carrinho");
-        window.location.href = "/PI-IV/templates/pedido/confirmacao.html";
-    }
+        window.location.href = "/PI-IV/templates/cliente/naoLogado/loginCliente.html"; // Redireciona para a página de login
+
+
 }

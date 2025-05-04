@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function mascaraCEP(input) {
-    var cep = input.value.replace(/\D/g, ''); // Remove qualquer coisa que não seja número
+    var cep = input.value.replace(/\D/g, '');
     if (cep.length <= 5) {
         input.value = cep.replace(/(\d{5})(\d{0,3})/, '$1-$2');
     } else {
@@ -44,7 +44,6 @@ function carregarCarrinho() {
     document.getElementById("totalCompra").innerText = totalCompra.toFixed(2);
     calcularFrete();
 
-    // Adicionando eventos aos inputs de quantidade
     document.querySelectorAll(".quantidade").forEach(input => {
         input.addEventListener("change", e => {
             const index = parseInt(e.target.dataset.index);
@@ -52,7 +51,6 @@ function carregarCarrinho() {
         });
     });
 
-    // Adicionando eventos aos botões de remover
     document.querySelectorAll(".remover").forEach(botao => {
         botao.addEventListener("click", e => {
             const index = parseInt(e.currentTarget.dataset.index);
@@ -86,9 +84,11 @@ function calcularFrete() {
 
     document.getElementById("valorFrete").innerText = freteSelecionado.toFixed(2);
     document.getElementById("totalCompra").innerText = (totalCompra + freteSelecionado).toFixed(2);
+    localStorage.setItem("freteSelecionado", freteSelecionado); // já está calculado anteriormente
+
 }
 
-async function finalizarCompra() {
+function finalizarCompra() {
     let freteSelecionado = document.getElementById("frete").value;
     let cep = document.getElementById("cep").value;
 
@@ -97,36 +97,8 @@ async function finalizarCompra() {
         return;
     }
 
-    // Exemplo fictício: dados de cliente e endereço já disponíveis
-    const clienteId = 1; // Substitua conforme necessário
-    const enderecoId = 1; // Substitua conforme necessário
+    localStorage.setItem("freteSelecionado", parseFloat(freteSelecionado)); // <-- isso aqui
 
-    const pedido = {
-        dtPedido: new Date(), // Data atual
-        cliente: { idCliente: clienteId },
-        endereco: { idEndereco: enderecoId },
-        formaPagamento: "Cartão de Crédito", // ou outra forma definida
-        valorFrete: parseFloat(freteSelecionado)
-    };
-
-    try {
-        const response = await fetch("http://localhost:8080/pedidos", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(pedido)
-        });
-
-        if (response.ok) {
-            alert("Compra finalizada com sucesso!");
-            localStorage.removeItem("carrinho"); // limpa o carrinho
-            window.location.reload(); // ou redirecionar para uma tela de sucesso
-        } else {
-            alert("Erro ao finalizar compra. Tente novamente.");
-        }
-    } catch (error) {
-        console.error("Erro ao enviar pedido:", error);
-        alert("Erro na comunicação com o servidor.");
-    }
+    localStorage.removeItem("carrinho");
+    window.location.href = "/src/main/resources/templates/pedido/checkout.html";
 }

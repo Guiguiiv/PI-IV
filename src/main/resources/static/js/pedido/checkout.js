@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     carregarCarrinho();
+    carregarEnderecos();
     document.getElementById("enderecoEntrega").addEventListener("change", atualizarResumo);
     document.getElementById("boleto").addEventListener("change", mostrarDadosCartao);
     document.getElementById("cartao").addEventListener("change", mostrarDadosCartao);
@@ -30,26 +31,61 @@ function carregarCarrinho() {
     });
 
     // Exibe o valor do frete e o total da compra
-    document.getElementById("freteResumo").innerText = freteSelecionado.toFixed(2);
-    document.getElementById("totalResumo").innerText = (totalCompra + freteSelecionado).toFixed(2);
+    document.getElementById("freteResumo").textContent = freteSelecionado.toFixed(2);
+    document.getElementById("totalResumo").textContent = (totalCompra + freteSelecionado).toFixed(2);
 }
+
 
 function atualizarResumo() {
     // Atualiza o resumo do pedido após selecionar o endereço
-    let freteSelecionado = parseFloat(document.getElementById("frete").value) || 0;
+    let freteSelecionado = parseFloat(document.getElementById("freteResumo").value) || 0;
     localStorage.setItem("freteSelecionado", freteSelecionado); // Salva o frete selecionado
     carregarCarrinho(); // Recarrega o carrinho com o novo valor de frete
+
+
 }
 
-function mostrarDadosCartao() {
-    // Exibe ou oculta os campos de dados do cartão, dependendo da forma de pagamento
-    let dadosCartao = document.getElementById("dadosCartao");
-    if (document.getElementById("cartao").checked) {
-        dadosCartao.classList.remove("d-none");
-    } else {
-        dadosCartao.classList.add("d-none");
-    }
+function carregarEnderecos() {
+    const select = document.getElementById("enderecoEntrega");
+    select.innerHTML = '<option value="">Selecione um endereço</option>'; // Reseta as opções antes de adicionar novas
+
+    // Faz a requisição ao backend para pegar os endereços do usuário
+    fetch("http://localhost:8080/endereco")  // A API que retorna os endereços cadastrados pelo usuário
+        .then(response => response.json())  // Converte a resposta para JSON
+        .then(enderecos => {
+            console.log(enderecos); // Verifica o conteúdo dos endereços retornados
+            if (enderecos && enderecos.length > 0) {
+                // Para cada endereço, cria uma nova opção no select
+                enderecos.forEach(endereco => {
+                    const option = document.createElement("option");
+                    option.value = endereco.id; // 'id' do endereço
+                    option.textContent = endereco.logradouro;
+                    select.appendChild(option);
+                });
+            } else {
+                // Caso não haja endereços cadastrados
+                const option = document.createElement("option");
+                option.value = "";
+                option.textContent = "Você ainda não cadastrou endereços.";
+                select.appendChild(option);
+            }
+        })
+        .catch(error => {
+            console.error("Erro ao carregar endereços:", error);
+            alert("Houve um erro ao carregar os endereços.");
+        });
 }
+
+// Carrega os endereços ao carregar a página
+window.onload = carregarEnderecos;
+
+
+function mostrarDadosCartao() {
+    const dadosCartao = document.getElementById("dadosCartao");
+    const cartaoSelecionado = document.getElementById("cartao").checked;
+    dadosCartao.classList.toggle("d-none", !cartaoSelecionado);
+}
+
 
 function confirmarPedido() {
     let enderecoEntrega = document.getElementById("enderecoEntrega").value;

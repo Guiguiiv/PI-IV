@@ -77,6 +77,8 @@ function removerDoCarrinho(index) {
 
 function calcularFrete() {
     let freteSelecionado = parseFloat(document.getElementById("frete").value) || 0;
+    localStorage.setItem("freteSelecionado", freteSelecionado);
+
     let totalCompra = 0;
 
     let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];

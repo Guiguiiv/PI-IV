@@ -2,6 +2,7 @@ package com.PI_IV.controller;
 
 import com.PI_IV.DAO.InterfaceEndereco;
 import com.PI_IV.model.Endereco;
+import com.PI_IV.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +18,19 @@ public class EnderecoController {
     @Autowired
     private InterfaceEndereco dao;
 
+    @Autowired
+    private EnderecoService enderecoService;
+
     // Listar todos os endereços
     @GetMapping
     public ResponseEntity<List<Endereco>> listarEnderecos() {
         return ResponseEntity.ok((List<Endereco>) dao.findAll());
+    }
+
+    @GetMapping("/{idCliente}")
+    public ResponseEntity<List<Endereco>> listarEnderecosPorCliente(@PathVariable int idCliente) {
+        List<Endereco> enderecos = enderecoService.buscarEnderecosPorIdCliente(idCliente);
+        return ResponseEntity.ok(enderecos);
     }
 
     // Criar um novo endereço

@@ -18,6 +18,8 @@ function carregarProdutos() {
         .catch(error => console.error("Erro ao buscar produtos:", error));
 }
 
+
+
 // Função para preencher a tabela com os produtos
 function preencherTabela(produtos) {
     let tabela = document.getElementById("tabelaProdutos");
@@ -61,6 +63,12 @@ function visualizarProduto(id) {
             document.getElementById("produtoNomeModal").innerText = produto.nome;
             document.getElementById("produtoQuantidadeModal").innerText = produto.quantidadeEstoque;
             document.getElementById("produtoPrecoModal").innerText = produto.preco.toFixed(2);
+
+            // Exibir avaliação em forma de estrelas
+            const avaliacaoContainer = document.getElementById("produtoAvaliacaoEstrelas");
+            const estrelas = "★".repeat(produto.avaliacao) + "☆".repeat(5 - produto.avaliacao);
+            avaliacaoContainer.innerText = estrelas;
+
 
             // Exibindo a imagem principal do produto
             const imagemPrincipal = document.getElementById("produtoImagemModal");

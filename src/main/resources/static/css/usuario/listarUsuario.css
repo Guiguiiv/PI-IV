@@ -1,0 +1,65 @@
+body {
+    background-color: #0d6efd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+    padding: 40px 15px;
+    margin: 0;
+}
+
+/* Título */
+h2 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Campo de busca */
+#searchInput {
+    border-radius: 8px;
+}
+
+button.btn-primary {
+    width: 100%;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+button.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+/* Tabela */
+.table {
+    background-color: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #212529;
+    font-weight: 600;
+}
+
+.table td {
+    color: #212529;
+    vertical-align: middle;
+}
+
+/* Botão de cadastro */
+a.btn-success {
+    margin-top: 20px;
+    font-weight: 600;
+    border-radius: 8px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+
+a.btn-success:hover {
+    background-color: #218838;
+}

@@ -1,28 +1,21 @@
-async function gerarNumeroPedido() {
-    const clienteLogado = JSON.parse(localStorage.getItem("clienteLogado"));
+// Função para gerar número de pedido aleatório de 6 dígitos
+function gerarNumeroPedido() {
+    const numero = Math.floor(100000 + Math.random() * 900000);
+    document.getElementById("numero-pedido").textContent = numero;
 
-    const pedido = {
-        clienteId: clienteLogado?.id, // ou ajuste conforme o modelo
-        valorTotal: localStorage.getItem("valorTotal") || 0
+    // Salvando número no localStorage para visualizar depois nos "Meus Pedidos"
+    const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
+    const novoPedido = {
+        numero: numero,
+        data: new Date().toLocaleDateString('pt-BR'),
+        valor: localStorage.getItem("valorTotal") || "R$ 0,00", // opcional
+        status: "Finalizado"
     };
-
-    try {
-        const response = await fetch("http://localhost:8080/pedidos", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(pedido)
-        });
-
-        const data = await response.json();
-
-        // Exibe número do pedido na tela
-        document.getElementById("numero-pedido").textContent = data.numeroPedido;
-
-    } catch (error) {
-        console.error("Erro ao criar pedido:", error);
-    }
+    pedidos.push(novoPedido);
+    localStorage.setItem("pedidos", JSON.stringify(pedidos));
 }
 
+// Exibe saudação com o nome do cliente logado
 function exibirSaudacaoCliente() {
     const clienteLogado = JSON.parse(localStorage.getItem("clienteLogado"));
     if (clienteLogado && clienteLogado.nomeCompleto) {
@@ -31,7 +24,8 @@ function exibirSaudacaoCliente() {
     }
 }
 
+// Executa ao carregar a página
 window.onload = function () {
     gerarNumeroPedido();
     exibirSaudacaoCliente();
-};
+}

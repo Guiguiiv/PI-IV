@@ -39,11 +39,27 @@
     <div class="text-center">
         <div class="display-1 text-success mb-3">✔️</div>
         <h2 class="text-primary mb-3">Pedido Confirmado!</h2>
-        <p class="fs-5">Seu número de pedido é: <strong id="numero-pedido"></strong></p>
+
+        <div class="mt-4">
+            <p class="fs-5">Número do pedido: <strong id="numero-pedido"></strong></p>
+            <p class="fs-5">Valor total: <strong id="valor-total"></strong></p>
+            <p class="fs-5">Frete: <strong id="valor-frete">R$ 0,00</strong></p>
+            <p class="fs-5">Forma de pagamento: <strong id="forma-pagamento">Cartão</strong></p>
+            <p class="fs-5">Endereço de entrega: <strong id="endereco-entrega"></strong></p>
+        </div>
+
+        <div class="mt-4">
+            <h5>Produtos:</h5>
+            <ul class="list-group" id="lista-produtos"></ul>
+        </div>
+
+        <div id="mensagem-pedido" class="alert mt-4 d-none"></div>
+
         <a href="/PI-IV/templates/produto/homeProdutosLogado.html" class="btn btn-outline-primary mt-4">
             <i class="fas fa-store me-2"></i> Voltar à loja
         </a>
     </div>
+
 </div>
 
 <script src="/static/js/pedido/confirmacao.js"></script>

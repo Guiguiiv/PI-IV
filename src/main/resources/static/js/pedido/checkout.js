@@ -125,6 +125,19 @@ function confirmarPedido() {
     // Limpa o carrinho após finalização
     localStorage.removeItem("carrinho");
 
+    // Salva endereço no localStorage
+    // Salva endereço
+    const enderecoSelecionadoTexto = document.getElementById("enderecoEntrega").selectedOptions[0].textContent;
+    localStorage.setItem("enderecoEntrega", JSON.stringify({
+        id: enderecoEntrega,
+        logradouro: enderecoSelecionadoTexto
+    }));
+
+// Salva valor total
+    let totalResumo = parseFloat(document.getElementById("totalResumo").textContent.replace(",", "."));
+    localStorage.setItem("valorTotal", totalResumo);
+
+
     // Redireciona para a página de confirmação do pedido (ajustado o caminho)
     window.location.href = "/PI-IV/templates/pedido/confirmacao.html";  // Caminho ajustado
 }

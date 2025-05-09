@@ -15,6 +15,13 @@ public class PedidoService {
     @Autowired
     private InterfacePedido pedidoRepository;
 
+
+    public Integer gerarNumeroPedidoSequencial() {
+        Integer max = pedidoRepository.findMaxNumeroPedido();
+        return (max != null) ? max + 1 : 10000; // Começa do 10000
+    }
+
+
     public Pedido criarPedido(Pedido pedido) {
         return pedidoRepository.save(pedido);
     }

@@ -2,11 +2,19 @@ package com.PI_IV.model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 import java.util.Date;
 
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 @Table(name = "pedido")
 public class Pedido {
 
@@ -32,52 +40,17 @@ public class Pedido {
     @Column(name = "valorFrete", nullable = false)
     private Double valorFrete;
 
-    // Getters and Setters
-    public Integer getIdPedido() {
-        return idPedido;
-    }
+    @Column(name = "status", nullable = false, length = 50)
+// Status do pedido ("aguardando pagamento", "finalizado", etc.)
+    private String status;
 
-    public void setIdPedido(Integer idPedido) {
-        this.idPedido = idPedido;
-    }
+    @Column(name = "valor_total", nullable = false)
+// Valor total do pedido
+    private Double valorTotal;
 
-    public Date getDtPedido() {
-        return dtPedido;
-    }
+    @Column(name = "numero_pedido", nullable = false, unique = true)
+// Número sequencial do pedido (ex: #10001)
+    private Integer numeroPedido;
 
-    public void setDtPedido(Date dtPedido) {
-        this.dtPedido = dtPedido;
-    }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public Endereco getEndereco() {
-        return endereco;
-    }
-
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
-    public String getFormaPagamento() {
-        return formaPagamento;
-    }
-
-    public void setFormaPagamento(String formaPagamento) {
-        this.formaPagamento = formaPagamento;
-    }
-
-    public Double getValorFrete() {
-        return valorFrete;
-    }
-
-    public void setValorFrete(Double valorFrete) {
-        this.valorFrete = valorFrete;
-    }
 }

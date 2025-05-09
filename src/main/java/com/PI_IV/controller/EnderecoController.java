@@ -27,11 +27,11 @@ public class EnderecoController {
         return ResponseEntity.ok((List<Endereco>) dao.findAll());
     }
 
-    @GetMapping("/{idCliente}")
-    public ResponseEntity<List<Endereco>> listarEnderecosPorCliente(@PathVariable int idCliente) {
-        List<Endereco> enderecos = enderecoService.buscarEnderecosPorIdCliente(idCliente);
-        return ResponseEntity.ok(enderecos);
-    }
+//    @GetMapping("/{idCliente}")
+//    public ResponseEntity<List<Endereco>> listarEnderecosPorCliente(@PathVariable int idCliente) {
+//        List<Endereco> enderecos = enderecoService.buscarEnderecosPorIdCliente(idCliente);
+//        return ResponseEntity.ok(enderecos);
+//    }
 
     // Criar um novo endereço
     @PostMapping

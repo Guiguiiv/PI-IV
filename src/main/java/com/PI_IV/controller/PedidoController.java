@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,10 +23,36 @@ public class PedidoController {
 
     // Criar um pedido
     @PostMapping
-    public ResponseEntity<Pedido> criarPedido(@RequestBody Pedido pedido) {
-        Pedido novoPedido = pedidoService.criarPedido(pedido);
-        return new ResponseEntity<>(novoPedido, HttpStatus.CREATED);
+    public ResponseEntity<?> criarPedido(@RequestBody Pedido pedido) {
+        try {
+            // Define a data atual do pedido
+            pedido.setDtPedido(new Date());
+
+            // Define o status inicial como "aguardando pagamento"
+            pedido.setStatus("aguardando pagamento");
+
+            // Gera número sequencial do pedido
+            Integer numero = pedidoService.gerarNumeroPedidoSequencial();
+            pedido.setNumeroPedido(numero);
+
+            // Salva o pedido no banco
+            Pedido salvo = pedidoService.criarPedido(pedido);
+
+            // Retorna uma resposta customizada para o frontend
+            return ResponseEntity.ok(Map.of(
+                    "mensagem", "Pedido criado com sucesso!",
+                    "numeroPedido", salvo.getNumeroPedido(),
+                    "valorTotal", salvo.getValorTotal(),
+                    "status", salvo.getStatus()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    Map.of("erro", "Erro ao salvar o pedido")
+            );
+        }
     }
+
+
 
     // Listar todos os pedidos
     @GetMapping
@@ -39,6 +67,8 @@ public class PedidoController {
         Optional<Pedido> pedido = pedidoService.buscarPedidoPorId(id);
         return pedido.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
+
+
 
     // Deletar um pedido
     @DeleteMapping("/{id}")

@@ -126,5 +126,5 @@ function confirmarPedido() {
     localStorage.removeItem("carrinho");
 
     // Redireciona para a página de confirmação do pedido (ajustado o caminho)
-    window.location.href = "/pedido/confirmacao.html";  // Caminho ajustado
+    window.location.href = "/templates/pedido/confirmacao.html";  // Caminho ajustado
 }

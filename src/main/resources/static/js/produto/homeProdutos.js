@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     carregarProdutos();
 
     function carregarProdutos() {
-        fetch("http://localhost:8080/produtos")
+        fetch("http://localhost:8080/produtos/ativos")
             .then(response => response.json())
             .then(produtos => {
                 let listaProdutos = document.getElementById("listaProdutos");

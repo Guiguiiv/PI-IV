@@ -1,8 +1,10 @@
 package com.PI_IV.controller;
 
+import com.PI_IV.DAO.InterfaceProduto;
 import com.PI_IV.model.Produto;
 import com.PI_IV.model.ImagemProduto;
 import com.PI_IV.service.ProdutoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +22,21 @@ import java.util.Optional;
 @RequestMapping("/produtos")
 public class ProdutoController {
 
+    @Autowired
+    InterfaceProduto interfaceProduto;
+
     private final ProdutoService service;
     private static final String UPLOAD_DIR = "C:/Users/Administrador/PI-IV/imagens_produto/";
 
     public ProdutoController(ProdutoService service) {
         this.service = service;
     }
+    // ✅ Endpoint para retornar apenas produtos ativos
+    @GetMapping("/ativos")
+    public List<Produto> listarProdutosAtivos() {
+        return interfaceProduto.findByAtivoTrue();
+    }
+
 
     @GetMapping
     public ResponseEntity<List<Produto>> listarTodos() {

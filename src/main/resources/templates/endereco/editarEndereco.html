@@ -2,84 +2,43 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Editar Endereço</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/endereco/editarEndereco.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Editar Endereços do Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body {
+            padding-top: 80px;
+            background-color: #f8f9fa;
+        }
+        .form-wrapper {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgb(0 0 0 / 0.1);
+        }
+        hr {
+            margin: 2rem 0;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg bg-primary shadow-sm">
+<nav class="navbar navbar-expand-lg bg-primary fixed-top shadow-sm">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center text-white fw-bold" href="/PI-IV/templates/produto/homeProdutosLogado.html">
-            <img src="/static/imagens/user.png" alt="Logo da Loja" width="40" class="me-2 rounded-circle border border-white">
+        <a class="navbar-brand text-white fw-bold" href="/PI-IV/templates/produto/homeProdutosLogado.html">
+            <img src="/static/imagens/user.png" alt="Logo da Loja" width="40" class="me-2 rounded-circle border border-white" />
             Minha Conta
         </a>
     </div>
 </nav>
 
-<!-- Formulário -->
 <section class="form-wrapper">
-    <div class="container-box">
-        <h2 class="mb-4">Editar Endereço</h2>
-        <form id="formEditarEndereco">
-
-            <div class="form-group mb-3">
-                <label for="cep" class="form-label">CEP</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-house-door-fill"></i></span>
-                    <input type="text" id="cep" class="form-control" placeholder="Digite seu CEP" required>
-                </div>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="logradouro" class="form-label">Logradouro</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-map-fill"></i></span>
-                    <input type="text" id="logradouro" class="form-control" placeholder="Digite o logradouro" required>
-                </div>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="numero" class="form-label">Número</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-sort-numeric-down-alt"></i></span>
-                    <input type="text" id="numero" class="form-control" placeholder="Número" required>
-                </div>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="bairro" class="form-label">Bairro</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-building"></i></span>
-                    <input type="text" id="bairro" class="form-control" placeholder="Bairro" required>
-                </div>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="cidade" class="form-label">Cidade</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
-                    <input type="text" id="cidade" class="form-control" placeholder="Cidade" required>
-                </div>
-            </div>
-
-            <div class="form-group mb-4">
-                <label for="estado" class="form-label">Estado</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-flag-fill"></i></span>
-                    <input type="text" id="estado" class="form-control" placeholder="Estado" required>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="#" class="btn btn-outline-secondary">Cancelar</a>
-            </div>
-
-        </form>
+    <h2 class="mb-4 text-center">Editar Endereços</h2>
+    <div id="lista-enderecos">
+        <!-- Endereços serão inseridos aqui via JS -->
     </div>
 </section>
 

@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (data.id) {
                         alert("Usuário cadastrado com sucesso!");
                         document.getElementById("formCadastro").reset();
-                        window.location.href = "usuarioNaoLogado.html";
+                        window.location.href = "/PI-IV/templates/usuario/menuAdm.html";
                     } else {
                         alert("Erro ao cadastrar usuário!");
                     }

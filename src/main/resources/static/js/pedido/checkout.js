@@ -50,7 +50,7 @@ function carregarEnderecos() {
     select.innerHTML = '<option value="">Selecione um endereço</option>'; // Reseta as opções antes de adicionar novas
 
     // Faz a requisição ao backend para pegar os endereços do usuário
-    fetch("http://localhost:8080/endereco")  // A API que retorna os endereços cadastrados pelo usuário
+    fetch(`http://localhost:8080/endereco/cliente/${idCliente}`)  // A API que retorna os endereços cadastrados pelo usuário
         .then(response => response.json())  // Converte a resposta para JSON
         .then(enderecos => {
             console.log(enderecos); // Verifica o conteúdo dos endereços retornados

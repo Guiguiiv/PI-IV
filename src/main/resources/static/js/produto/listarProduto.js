@@ -1,35 +1,64 @@
+// 🚀 Quando a página terminar de carregar, iniciar funcionalidades principais
 document.addEventListener("DOMContentLoaded", function () {
-    carregarProdutos();
+    carregarProdutos(); // Carregar e mostrar todos os produtos da API
+
+    // 🧠 Detectar quando o usuário começar a digitar no campo de busca
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", buscarProduto);
 });
 
-// Função para carregar os produtos na tabela
+// 📥 Buscar todos os produtos do backend e exibir na tabela
 function carregarProdutos() {
     fetch("http://localhost:8080/produtos")
         .then(response => {
-            if (!response.ok) {
-                throw new Error("Erro na resposta da API: " + response.statusText);
-            }
+            if (!response.ok) throw new Error("Erro ao buscar os produtos.");
             return response.json();
         })
         .then(produtos => {
-            console.log("Produtos recebidos:", produtos); // Log para depuração
-            preencherTabela(produtos);
+            preencherTabela(produtos); // Mostrar os produtos na tabela
         })
-        .catch(error => console.error("Erro ao buscar produtos:", error));
+        .catch(error => console.error("Erro ao carregar produtos:", error));
 }
 
+// 🔎 Procurar produto conforme texto digitado no campo de busca
+function buscarProduto() {
+    const termoBusca = document.getElementById("searchInput").value.trim().toLowerCase();
 
+    // Se o campo estiver vazio, recarregar todos os produtos
+    if (termoBusca.length < 1) {
+        carregarProdutos();
+        return;
+    }
 
-// Função para preencher a tabela com os produtos
+    // Buscar todos os produtos e filtrar pelo termo digitado
+    fetch("http://localhost:8080/produtos")
+        .then(response => {
+            if (!response.ok) throw new Error("Erro ao buscar os produtos.");
+            return response.json();
+        })
+        .then(produtos => {
+            // Filtrar produtos que combinam com o nome ou ID
+            const filtrados = produtos.filter(produto => {
+                return produto.id.toString() === termoBusca || produto.nome.toLowerCase().includes(termoBusca);
+            });
+
+            preencherTabela(filtrados); // Mostrar somente os produtos filtrados
+        })
+        .catch(error => console.error("Erro ao filtrar produtos:", error));
+}
+
+// 🖨️ Exibir os produtos recebidos na tabela da tela
 function preencherTabela(produtos) {
     let tabela = document.getElementById("tabelaProdutos");
-    tabela.innerHTML = "";
+    tabela.innerHTML = ""; // Limpar conteúdo atual da tabela
 
+    // Se nenhum produto encontrado, mostrar aviso
     if (produtos.length === 0) {
         tabela.innerHTML = `<tr><td colspan="6" class="text-center">Nenhum produto encontrado.</td></tr>`;
         return;
     }
 
+    // Para cada produto, adicionar uma linha na tabela
     produtos.forEach(produto => {
         let statusTexto = produto.ativo ? "Ativo" : "Inativo";
         let novaLinha = `
@@ -41,9 +70,9 @@ function preencherTabela(produtos) {
                 <td>${statusTexto}</td>
                 <td class="text-center">
                     <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-info" style="min-width: 100px;" onclick="visualizarProduto(${produto.id})">Visualizar</button>
-                        <button class="btn btn-warning" style="min-width: 100px;" onclick="editarProduto(${produto.id})">Editar</button>
-                        <button class="btn ${produto.ativo ? 'btn-danger' : 'btn-success'}" style="min-width: 100px;" onclick="alterarStatusProduto(${produto.id}, ${produto.ativo})">
+                        <button class="btn btn-info" onclick="visualizarProduto(${produto.id})">Visualizar</button>
+                        <button class="btn btn-warning" onclick="editarProduto(${produto.id})">Editar</button>
+                        <button class="btn ${produto.ativo ? 'btn-danger' : 'btn-success'}" onclick="alterarStatusProduto(${produto.id}, ${produto.ativo})">
                             ${produto.ativo ? 'Desativar' : 'Ativar'}
                         </button>
                     </div>
@@ -54,96 +83,62 @@ function preencherTabela(produtos) {
     });
 }
 
-// Função para visualizar detalhes do produto em um modal
+// 👁️ Abrir modal com detalhes do produto selecionado
 function visualizarProduto(id) {
     fetch(`http://localhost:8080/produtos/${id}`)
         .then(response => response.json())
         .then(produto => {
-            // Exibe o nome do produto no modal
+            // Preencher o modal com informações do produto
             document.getElementById("produtoNomeModal").innerText = produto.nome;
             document.getElementById("produtoQuantidadeModal").innerText = produto.quantidadeEstoque;
             document.getElementById("produtoPrecoModal").innerText = produto.preco.toFixed(2);
 
-            // Exibir avaliação em forma de estrelas
-            const avaliacaoContainer = document.getElementById("produtoAvaliacaoEstrelas");
+            // Mostrar as estrelas de avaliação
             const estrelas = "★".repeat(produto.avaliacao) + "☆".repeat(5 - produto.avaliacao);
-            avaliacaoContainer.innerText = estrelas;
+            document.getElementById("produtoAvaliacaoEstrelas").innerText = estrelas;
 
+            // Mostrar imagem principal do produto
+            const imagem = document.getElementById("produtoImagemModal");
+            imagem.src = produto.imagemPadrao
+                ? `http://localhost:8080/${produto.imagemPadrao}`
+                : "https://via.placeholder.com/300?text=Sem+Imagem";
 
-            // Exibindo a imagem principal do produto
-            const imagemPrincipal = document.getElementById("produtoImagemModal");
-            if (produto.imagemPadrao) {
-                // Se a imagem principal estiver configurada, exibe-a
-                imagemPrincipal.src = `http://localhost:8080/${produto.imagemPadrao}`;
-            } else {
-                // Caso contrário, exibe uma imagem de placeholder
-                imagemPrincipal.src = "https://via.placeholder.com/300?text=Sem+Imagem";
-            }
+            // Montar carrossel com imagens adicionais
+            const carousel = document.getElementById("carouselInner");
+            carousel.innerHTML = "";
 
-            // Carregar as imagens adicionais no carrossel
-            const carouselInner = document.getElementById("carouselInner");
-            carouselInner.innerHTML = ""; // Limpa o carrossel anterior
-
-            if (produto.imagensAdicionais && produto.imagensAdicionais.length > 0) {
+            if (produto.imagensAdicionais?.length > 0) {
                 produto.imagensAdicionais.forEach((img, index) => {
-                    // Cria o item do carrossel
                     let divItem = document.createElement("div");
                     divItem.classList.add("carousel-item");
-                    if (img.padrao) divItem.classList.add("active"); // A imagem padrão é a primeira (ativa)
+                    if (img.padrao) divItem.classList.add("active");
 
-                    // Cria a tag <img> para o carrossel
                     let imgElement = document.createElement("img");
-                    imgElement.src = `http://localhost:8080/${img.caminho}`;  // Ajusta o caminho da imagem
+                    imgElement.src = `http://localhost:8080/${img.caminho}`;
                     imgElement.classList.add("d-block", "w-100");
                     imgElement.style.height = "400px";
                     imgElement.style.objectFit = "cover";
 
-                    // Adiciona a imagem ao item do carrossel
                     divItem.appendChild(imgElement);
-                    carouselInner.appendChild(divItem);
+                    carousel.appendChild(divItem);
                 });
             } else {
-                // Caso não haja imagens adicionais, exibe uma imagem padrão
-                carouselInner.innerHTML = "<div class='carousel-item active'><img src='https://via.placeholder.com/300?text=Sem+Imagem' class='d-block w-100'></div>";
+                // Se não houver imagens, mostrar imagem padrão
+                carousel.innerHTML = "<div class='carousel-item active'><img src='https://via.placeholder.com/300?text=Sem+Imagem' class='d-block w-100'></div>";
             }
 
-            // Exibe o modal
-            let modal = new bootstrap.Modal(document.getElementById("modalVisualizarProduto"));
-            modal.show();
+            // Abrir o modal com os detalhes
+            new bootstrap.Modal(document.getElementById("modalVisualizarProduto")).show();
         })
-        .catch(() => alert("Erro ao carregar detalhes do produto."));
+        .catch(() => alert("Erro ao mostrar os detalhes do produto."));
 }
 
-// Função para confirmar a alteração de status do produto
-function alterarStatusProduto(id, statusAtual) {
-    let acao = statusAtual ? "desativar" : "ativar";
-
-    if (confirm(`Tem certeza que deseja ${acao} este produto?`)) {
-        fetch(`http://localhost:8080/produtos/${id}/ativarDesativar`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Erro ao alterar status do produto.");
-                }
-                return response.json();
-            })
-            .then(produtoAtualizado => {
-                alert(`Produto ${produtoAtualizado.ativo ? 'ativado' : 'desativado'} com sucesso!`);
-                carregarProdutos();
-            })
-            .catch(error => {
-                console.error("Erro ao alterar status do produto:", error);
-                alert("Erro ao alterar o status do produto.");
-            });
-    }
-}
-
+// 📝 Abrir modal com formulário para editar o produto
 function editarProduto(id) {
     fetch(`http://localhost:8080/produtos/${id}`)
         .then(response => response.json())
         .then(produto => {
+            // Preencher o formulário com os dados atuais do produto
             document.getElementById("produtoId").value = produto.id;
             document.getElementById("produtoNome").value = produto.nome;
             document.getElementById("produtoValor").value = produto.preco;
@@ -152,13 +147,13 @@ function editarProduto(id) {
             document.getElementById("produtoAvaliacao").value = produto.avaliacao;
             document.getElementById("produtoStatus").value = produto.ativo;
 
-            let modal = new bootstrap.Modal(document.getElementById("modalEditarProduto"));
-            modal.show();
+            // Exibir o modal de edição
+            new bootstrap.Modal(document.getElementById("modalEditarProduto")).show();
         })
         .catch(() => alert("Erro ao carregar os dados do produto."));
 }
 
-// Função para salvar alterações do produto
+// 💾 Salvar alterações feitas no produto
 function salvarEdicaoProduto() {
     let id = document.getElementById("produtoId").value;
     let nome = document.getElementById("produtoNome").value;
@@ -169,13 +164,7 @@ function salvarEdicaoProduto() {
     let status = document.getElementById("produtoStatus").value === "true";
 
     let produtoAtualizado = {
-        id: id,
-        nome: nome,
-        preco: preco,
-        quantidadeEstoque: quantidade,
-        descricao: descricao,
-        avaliacao: avaliacao,
-        ativo: status
+        id, nome, preco, quantidadeEstoque: quantidade, descricao, avaliacao, ativo: status
     };
 
     fetch(`http://localhost:8080/produtos/${id}`, {
@@ -185,14 +174,28 @@ function salvarEdicaoProduto() {
     })
         .then(() => {
             alert("Produto atualizado com sucesso!");
-            let modal = bootstrap.Modal.getInstance(document.getElementById("modalEditarProduto"));
-            modal.hide();
-            carregarProdutos();
+            carregarProdutos(); // Atualizar lista após edição
         })
-        .catch(() => alert("Erro ao atualizar o produto."));
+        .catch(() => alert("Erro ao salvar o produto."));
 }
 
-// Redireciona para a tela de cadastro
-function cadastrarProduto() {
-    window.location.href = "cadastrarProduto.html";
+// 🔄 Ativar ou desativar um produto, conforme status atual
+function alterarStatusProduto(id, statusAtual) {
+    let acao = statusAtual ? "desativar" : "ativar";
+
+    if (confirm(`Tem certeza que quer ${acao} este produto?`)) {
+        fetch(`http://localhost:8080/produtos/${id}/ativarDesativar`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(response => {
+                if (!response.ok) throw new Error();
+                return response.json();
+            })
+            .then(produto => {
+                alert(`Produto ${produto.ativo ? 'ativado' : 'desativado'} com sucesso!`);
+                carregarProdutos(); // Atualizar tabela
+            })
+            .catch(() => alert("Erro ao mudar o status do produto."));
+    }
 }

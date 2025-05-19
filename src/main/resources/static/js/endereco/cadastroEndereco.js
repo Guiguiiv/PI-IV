@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+    const clienteLogado = JSON.parse(localStorage.getItem("clienteLogado"));
+
     const cepInput = document.getElementById("cep");
     const logradouroInput = document.getElementById("logradouro");
     const numeroInput = document.getElementById("numero");
@@ -60,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tipoEndereco: true, // ou false, dependendo da lógica desejada
             principal: true,    // ou false, dependendo da lógica desejada
             cliente: {
-                id: 1 // Coloque aqui o ID do cliente logado ou selecionado
+                id: clienteLogado.id
             }
         };
 

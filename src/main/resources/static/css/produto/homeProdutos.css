@@ -1,6 +1,5 @@
-
 body {
-    background-color: #0d6efd;
+    background-color: #c8d0dc;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
@@ -13,44 +12,60 @@ body {
 .navbar-dark .navbar-brand img:hover {
     transform: scale(1.1);
 }
-
-/* Container de opções (login/carrinho/config/saída) */
-.nav-options,
-.navbar .d-flex.align-items-center {
+.nav-options {
     display: flex;
     align-items: center;
     gap: 1rem;
     margin-left: auto;
 }
 
-/* Botões circulares (carrinho, config, sair) */
-.btn-circle {
-    width: 44px;
-    height: 44px;
-    padding: 0;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.btn-circle img,
-.btn-circle .bi {
-    width: 24px;
-    height: 24px;
-}
-
-/* Hover suave para botões claros */
-.btn-light:hover {
-    background-color: #e2e6ea;
-}
-
-/* ===== Títulos de Seção ===== */
-h2 {
-    color: #343a40;
-    font-weight: 700;
+.titulo-produtos {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
     text-transform: uppercase;
-    margin-bottom: 2rem !important;
+    color: #002c68;
+    position: relative;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+    animation: fadeInTitle 1s ease-in-out;
 }
+
+/* Linha decorativa animada abaixo do texto */
+.titulo-produtos::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #6da9ff, #30065e);
+    border-radius: 2px;
+    animation: underlineGrow 1s ease-in-out forwards;
+}
+
+/* Animações */
+@keyframes fadeInTitle {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes underlineGrow {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 80px;
+    }
+}
+
 
 /* ===== Lista de Produtos ===== */
 #listaProdutos .card {
@@ -70,29 +85,97 @@ h2 {
     transform: scale(1.05);
 }
 
-/* ===== Modais ===== */
+/* ===== Modal Geral ===== */
+.modal-dialog.modal-lg {
+    max-width: 700px; /* menor que padrão */
+}
 .modal-content {
-    border-radius: 12px;
-}
-.modal-header {
-    background: linear-gradient(90deg, #0069d9, #0053ba);
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    color: #fff;
-}
-.modal-header .modal-title {
-    flex: 1;
-    text-align: center;
-    margin: 0;
-}
-#modalConfirmarSaida .modal-content {
-    border-radius: 8px;
+    background: linear-gradient(145deg, #ffffff, #f0f4f8);
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    padding: 20px;
+    border: none;
 }
 
-/* ===== Botão de Compra no Modal ===== */
+/* Cabeçalho do Modal */
+.modal-header {
+    background: linear-gradient(to right, #007bff, #0056b3);
+    color: #fff;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 1rem 1.5rem;
+}
+.modal-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    flex: 1;
+}
+
+/* Botão fechar do modal */
+.modal-header .btn-close {
+    filter: invert(1);
+    opacity: 0.8;
+}
+
+/* Corpo do Modal */
+.modal-body {
+    padding: 1.5rem;
+    background-color: #fff;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+/* Imagem principal do produto */
+#produtoImagemModal {
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Carrossel */
+.carousel-inner img {
+    border-radius: 10px;
+    height: 130px;
+    object-fit: cover;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(1);
+}
+
+/* Informações do produto */
+.modal-body p {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Botão de comprar */
 #botaoComprarProduto {
+    background-color: #28a745;
+    border: none;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: 30px;
     transition: background-color 0.3s ease;
 }
 #botaoComprarProduto:hover {
-    background-color: #28a745cc;
+    background-color: #218838;
+}
+
+/* ===== Modal Confirmar Saída ===== */
+#modalConfirmarSaida .modal-content {
+    border-radius: 16px;
+    padding: 1rem;
+}
+#modalConfirmarSaida .modal-header {
+    background-color: #dc3545;
+    color: white;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+#modalConfirmarSaida .modal-footer .btn {
+    border-radius: 25px;
 }

@@ -27,11 +27,12 @@ public class EnderecoController {
         return ResponseEntity.ok((List<Endereco>) dao.findAll());
     }
 
-//    @GetMapping("/{idCliente}")
-//    public ResponseEntity<List<Endereco>> listarEnderecosPorCliente(@PathVariable int idCliente) {
-//        List<Endereco> enderecos = enderecoService.buscarEnderecosPorIdCliente(idCliente);
-//        return ResponseEntity.ok(enderecos);
-//    }
+    // Listar endereços por cliente - usando o serviço (Opção 1)
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<Endereco>> listarEnderecosPorCliente(@PathVariable int idCliente) {
+        List<Endereco> enderecos = enderecoService.buscarEnderecosPorIdCliente(idCliente);
+        return ResponseEntity.ok(enderecos);
+    }
 
     // Criar um novo endereço
     @PostMapping
@@ -65,18 +66,11 @@ public class EnderecoController {
     }
 
     // Buscar endereço por ID
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Endereco> buscarPorId(@PathVariable Integer id) {
         return dao.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
-    }
-
-    // Buscar endereços por cliente
-    @GetMapping("/cliente/{idCliente}")
-    public ResponseEntity<List<Endereco>> buscarPorCliente(@PathVariable int idCliente) {
-        List<Endereco> enderecos = dao.findByClienteId(idCliente);
-        return ResponseEntity.ok(enderecos);
     }
 
     // Deletar endereço

@@ -1,61 +1,76 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lista de Produtos</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
+  <link rel="stylesheet" href="/static/css/usuario/listarProduto.css">
+  <style>
+    .input-group .form-control:focus {
+      box-shadow: none;
+    }
+    .input-group .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.375rem 0.75rem;
+    }
+    .table th, .table td {
+      vertical-align: middle !important;
+    }
+    .modal-body img {
+      max-height: 350px;
+      object-fit: contain;
+    }
+  </style>
 </head>
 <body class="bg-light">
 
-<div class="container mt-5">
-  <!-- Título Centralizado -->
+<div class="container py-5">
+  <!-- Título -->
   <div class="text-center mb-4">
     <h2 class="display-5 text-primary fw-bold">Lista de Produtos</h2>
   </div>
 
-  <!-- Campo de Busca -->
-  <div class="input-group mb-3">
-    <input type="text" id="searchInput" class="form-control" placeholder="Digite um ID ou um Nome valido">
-    <button onclick="buscarProduto()" class="btn btn-warning">
-      <img src="https://cdn-icons-png.flaticon.com/512/149/149852.png" width="20px">
-    </button>
+  <!-- Busca -->
+  <div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+      <div class="input-group shadow-sm">
+        <input type="text" id="searchInput" class="form-control" placeholder="Digite um ID ou Nome de um produto">
+        <button onclick="buscarProduto()" class="btn btn-warning">
+          <img src="https://cdn-icons-png.flaticon.com/512/149/149852.png" width="20" alt="Buscar">
+        </button>
+      </div>
+    </div>
   </div>
 
+  <!-- Cabeçalho e Botão -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="fw-semibold">Produtos Cadastrados</h4>
-    <button class="btn btn-primary" onclick="cadastrarProduto()">Cadastrar Novo Produto</button>
+    <a href="/PI-IV/templates/produto/cadastrarProduto.html" class="btn btn-primary">Cadastrar Novo Produto</a>
   </div>
 
-  <!-- Tabela de Produtos em um Card -->
-  <div class="card shadow-lg rounded">
+
+  <!-- Tabela -->
+  <div class="card shadow rounded">
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table table-hover table-bordered text-center align-middle">
-          <thead class="table-primary">
+        <table id="tabelaProdutos" class="table table-bordered table-hover text-center">
+          <thead class="table-dark">
           <tr>
-            <th>Código</th>
+            <th>ID</th>
             <th>Nome</th>
             <th>Quantidade</th>
-            <th>Valor</th>
+            <th>Preço</th>
             <th>Status</th>
-            <th>Opções</th>
+            <th>Ações</th>
           </tr>
           </thead>
-          <!-- Tabela de Produtos -->
-          <table id="tabelaProdutos" class="table table-bordered table-striped table-hover">
-            <thead class="table-dark">
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>Quantidade</th>
-              <th>Preço</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+          <tbody>
+          <!-- Dados inseridos via JS -->
+          </tbody>
         </table>
       </div>
     </div>
@@ -89,7 +104,6 @@
             </div>
           </div>
 
-
           <!-- Informações do Produto -->
           <div class="col-md-6 d-flex flex-column justify-content-between">
             <div>
@@ -103,7 +117,6 @@
               <div id="produtoAvaliacaoEstrelas" class="mb-3 fs-5 text-warning">
                 <!-- Estrelas renderizadas via JavaScript -->
               </div>
-
             </div>
             <div class="text-center">
               <button class="btn btn-success btn-lg w-75" id="botaoComprarProduto">
@@ -117,7 +130,6 @@
   </div>
 </div>
 
-
 <!-- Modal de Edição -->
 <div class="modal fade" id="modalEditarProduto" tabindex="-1" aria-labelledby="modalEditarProdutoLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -130,37 +142,31 @@
         <form id="formEditarProduto">
           <input type="hidden" id="produtoId">
 
-          <!-- Nome -->
           <div class="mb-3">
             <label for="produtoNome" class="form-label fw-semibold">Nome</label>
             <input type="text" class="form-control" id="produtoNome" required>
           </div>
 
-          <!-- Preço -->
           <div class="mb-3">
             <label for="produtoValor" class="form-label fw-semibold">Preço</label>
             <input type="number" class="form-control" id="produtoValor" step="0.01" required>
           </div>
 
-          <!-- Quantidade -->
           <div class="mb-3">
             <label for="produtoQuantidade" class="form-label fw-semibold">Quantidade em Estoque</label>
             <input type="number" class="form-control" id="produtoQuantidade" required>
           </div>
 
-          <!-- Descrição -->
           <div class="mb-3">
             <label for="produtoDescricao" class="form-label fw-semibold">Descrição</label>
             <textarea class="form-control" id="produtoDescricao" rows="3" required></textarea>
           </div>
 
-          <!-- Avaliação -->
           <div class="mb-3">
             <label for="produtoAvaliacao" class="form-label fw-semibold">Avaliação (0 a 5)</label>
             <input type="number" class="form-control" id="produtoAvaliacao" step="0.1" min="0" max="5" required>
           </div>
 
-          <!-- Status -->
           <div class="mb-3">
             <label for="produtoStatus" class="form-label fw-semibold">Status</label>
             <select class="form-control" id="produtoStatus">

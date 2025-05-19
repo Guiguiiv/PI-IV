@@ -62,23 +62,24 @@ function preencherTabela(produtos) {
     produtos.forEach(produto => {
         let statusTexto = produto.ativo ? "Ativo" : "Inativo";
         let novaLinha = `
-            <tr>
-                <td>${produto.id}</td>
-                <td>${produto.nome}</td>
-                <td>${produto.quantidadeEstoque}</td>
-                <td>R$ ${produto.preco.toFixed(2)}</td>
-                <td>${statusTexto}</td>
-                <td class="text-center">
-                    <div class="d-flex justify-content-center gap-2">
-                        <button class="btn btn-info" onclick="visualizarProduto(${produto.id})">Visualizar</button>
-                        <button class="btn btn-warning" onclick="editarProduto(${produto.id})">Editar</button>
-                        <button class="btn ${produto.ativo ? 'btn-danger' : 'btn-success'}" onclick="alterarStatusProduto(${produto.id}, ${produto.ativo})">
-                            ${produto.ativo ? 'Desativar' : 'Ativar'}
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
+    <tr>
+        <td>${produto.id}</td>
+        <td>${produto.nome}</td>
+        <td>${produto.quantidadeEstoque}</td>
+        <td>R$ ${produto.preco.toFixed(2)}</td>
+        <td>${statusTexto}</td>
+        <td class="text-center">
+            <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-info" style="width: 100px;" onclick="visualizarProduto(${produto.id})">Visualizar</button>
+                <button class="btn btn-warning" style="width: 100px;" onclick="editarProduto(${produto.id})">Editar</button>
+                <button class="btn ${produto.ativo ? 'btn-danger' : 'btn-success'}" style="width: 100px;" onclick="alterarStatusProduto(${produto.id}, ${produto.ativo})">
+                    ${produto.ativo ? 'Desativar' : 'Ativar'}
+                </button>
+            </div>
+        </td>
+    </tr>
+`;
+
         tabela.innerHTML += novaLinha;
     });
 }

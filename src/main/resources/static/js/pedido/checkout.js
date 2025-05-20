@@ -1,6 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const clienteLogado = localStorage.getItem("clienteLogado");
+
+    let idCliente = null;
+    if (clienteLogado) {
+        try {
+            const cliente = JSON.parse(clienteLogado);
+            idCliente = cliente.id; // Aqui você extrai o ID do cliente
+        } catch (e) {
+            console.error("Erro ao processar cliente logado:", e);
+        }
+    }
+
     carregarCarrinho();
-    carregarEnderecos();
+
+    if (idCliente) {
+        carregarEnderecos(idCliente);
+    } else {
+        alert("Você precisa estar logado para continuar com o checkout.");
+    }
+
     document.getElementById("enderecoEntrega").addEventListener("change", atualizarResumo);
     document.getElementById("boleto").addEventListener("change", mostrarDadosCartao);
     document.getElementById("cartao").addEventListener("change", mostrarDadosCartao);
@@ -45,25 +63,22 @@ function atualizarResumo() {
 
 }
 
-function carregarEnderecos() {
-    const select = document.getElementById("enderecoEntrega");
-    select.innerHTML = '<option value="">Selecione um endereço</option>'; // Reseta as opções antes de adicionar novas
 
-    // Faz a requisição ao backend para pegar os endereços do usuário
-    fetch(`http://localhost:8080/endereco/cliente/${idCliente}`)  // A API que retorna os endereços cadastrados pelo usuário
-        .then(response => response.json())  // Converte a resposta para JSON
+function carregarEnderecos(idCliente) {
+    const select = document.getElementById("enderecoEntrega");
+    select.innerHTML = '<option value="">Selecione um endereço</option>';
+
+    fetch(`http://localhost:8080/endereco/cliente/${idCliente}`)
+        .then(response => response.json())
         .then(enderecos => {
-            console.log(enderecos); // Verifica o conteúdo dos endereços retornados
-            if (enderecos && enderecos.length > 0) {
-                // Para cada endereço, cria uma nova opção no select
+            if (enderecos.length > 0) {
                 enderecos.forEach(endereco => {
                     const option = document.createElement("option");
-                    option.value = endereco.id; // 'id' do endereço
+                    option.value = endereco.id;
                     option.textContent = endereco.logradouro;
                     select.appendChild(option);
                 });
             } else {
-                // Caso não haja endereços cadastrados
                 const option = document.createElement("option");
                 option.value = "";
                 option.textContent = "Você ainda não cadastrou endereços.";
@@ -75,9 +90,6 @@ function carregarEnderecos() {
             alert("Houve um erro ao carregar os endereços.");
         });
 }
-
-// Carrega os endereços ao carregar a página
-window.onload = carregarEnderecos;
 
 
 function mostrarDadosCartao() {

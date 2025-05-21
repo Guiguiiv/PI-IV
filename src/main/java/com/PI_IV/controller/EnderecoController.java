@@ -1,6 +1,5 @@
 package com.PI_IV.controller;
 
-import com.PI_IV.DAO.InterfaceEndereco;
 import com.PI_IV.model.Endereco;
 import com.PI_IV.service.EnderecoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +15,37 @@ import java.util.Optional;
 public class EnderecoController {
 
     @Autowired
-    private InterfaceEndereco dao;
-
-    @Autowired
     private EnderecoService enderecoService;
 
     // Listar todos os endereços
     @GetMapping
     public ResponseEntity<List<Endereco>> listarEnderecos() {
-        return ResponseEntity.ok((List<Endereco>) dao.findAll());
+        return ResponseEntity.ok(enderecoService.listarEnderecos());
     }
 
-    // Listar endereços por cliente - usando o serviço (Opção 1)
+    // Listar endereços por cliente
     @GetMapping("/cliente/{idCliente}")
     public ResponseEntity<List<Endereco>> listarEnderecosPorCliente(@PathVariable int idCliente) {
-        List<Endereco> enderecos = enderecoService.buscarEnderecosPorIdCliente(idCliente);
-        return ResponseEntity.ok(enderecos);
+        return ResponseEntity.ok(enderecoService.buscarEnderecosPorIdCliente(idCliente));
     }
 
     // Criar um novo endereço
     @PostMapping
     public ResponseEntity<Endereco> criarEndereco(@RequestBody Endereco endereco) {
-        return ResponseEntity.status(201).body(dao.save(endereco));
+        return ResponseEntity.status(201).body(enderecoService.criarEndereco(endereco));
+    }
+
+    // Definir endereço como principal
+    @PutMapping("/{id}/definir-principal")
+    public ResponseEntity<Void> definirEnderecoComoPrincipal(@PathVariable Integer id) {
+        boolean sucesso = enderecoService.definirEnderecoPrincipal(id);
+        return sucesso ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 
     // Atualizar um endereço
     @PutMapping("/{id}")
     public ResponseEntity<Endereco> atualizarEndereco(@PathVariable Integer id, @RequestBody Endereco enderecoAtualizado) {
-        Optional<Endereco> enderecoOpt = dao.findById(id);
+        Optional<Endereco> enderecoOpt = enderecoService.buscarEnderecoPorId(id);
 
         if (enderecoOpt.isPresent()) {
             Endereco endereco = enderecoOpt.get();
@@ -59,7 +61,7 @@ public class EnderecoController {
             endereco.setPrincipal(enderecoAtualizado.isPrincipal());
             endereco.setCliente(enderecoAtualizado.getCliente());
 
-            return ResponseEntity.ok(dao.save(endereco));
+            return ResponseEntity.ok(enderecoService.editarEndereco(endereco));
         }
 
         return ResponseEntity.notFound().build();
@@ -68,7 +70,7 @@ public class EnderecoController {
     // Buscar endereço por ID
     @GetMapping("/id/{id}")
     public ResponseEntity<Endereco> buscarPorId(@PathVariable Integer id) {
-        return dao.findById(id)
+        return enderecoService.buscarEnderecoPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -76,10 +78,7 @@ public class EnderecoController {
     // Deletar endereço
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarEndereco(@PathVariable Integer id) {
-        if (dao.existsById(id)) {
-            dao.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        boolean deletado = enderecoService.deletarEndereco(id);
+        return deletado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

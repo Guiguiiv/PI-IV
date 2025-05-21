@@ -6,7 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface InterfaceEndereco extends CrudRepository<Endereco, Integer> {
-    List<Endereco> findByClienteId(int idCliente);
 
-    List<Endereco> findByPrincipalTrue();  // <- adiciona isso aqui
+    List<Endereco> findByClienteId(Integer idCliente); // ✅ obrigatório
+
+    // Opcional: útil se quiser listar todos os endereços principais (sem filtrar por cliente)
+    List<Endereco> findByPrincipalTrue();
 }

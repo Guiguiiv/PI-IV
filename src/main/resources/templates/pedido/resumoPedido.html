@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo do Pedido</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm p-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="/imagens/compras-online.png" alt="Logo da Loja" width="35" class="me-2">
+            <span class="fw-bold text-white">Loja Virtual</span>
+        </a>
+        <div class="nav-options">
+            <span id="saudacaoCliente" class="text-white fw-semibold"></span>
+            <a href="/PI-IV/templates/pedido/checkout.html">
+                <img src="/imagens/carrinho-de-compras.png" alt="Carrinho" width="35">
+            </a>
+            <a href="/PI-IV/templates/endereco/sessaoEndereco.html">
+                <img src="/imagens/config.png" alt="Configurações" width="35">
+            </a>
+            <a href="/PI-IV/templates/produto/homeProdutos.html">
+                <img src="/imagens/sair.png" alt="Sair" width="35">
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Conteúdo -->
+<div class="container py-5">
+    <h2 class="text-center text-primary mb-4">Resumo do Pedido</h2>
+
+    <!-- Resumo do Carrinho -->
+    <div class="mb-5">
+        <h4 class="mb-3">Produtos Selecionados</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered align-middle shadow-sm">
+                <thead class="table-primary text-center">
+                <tr>
+                    <th>Produto</th>
+                    <th>Preço</th>
+                    <th>Qtd</th>
+                    <th>Subtotal</th>
+                </tr>
+                </thead>
+                <tbody id="tabelaResumoPedido"></tbody>
+            </table>
+        </div>
+        <div class="text-end">
+            <h5>Frete: R$ <span id="freteResumo">0.00</span></h5>
+            <h4>Total: <strong>R$ <span id="totalResumo">0.00</span></strong></h4>
+        </div>
+    </div>
+
+    <!-- Endereço Escolhido -->
+    <div class="mb-4">
+        <h5 class="fw-bold">Endereço de Entrega</h5>
+        <p id="resumoEndereco"></p>
+    </div>
+
+    <!-- Forma de Pagamento -->
+    <div class="mb-4">
+        <h5 class="fw-bold">Forma de Pagamento</h5>
+        <p id="resumoPagamento"></p>
+    </div>
+
+    <!-- Botão de Finalizar Pedido -->
+    <div class="text-end">
+        <button class="btn btn-success btn-lg" id="finalizarPedidoBtn">
+            <i class="fas fa-check me-1"></i> Finalizar Pedido
+        </button>
+    </div>
+</div>
+
+<script src="/js/cliente/carregarLogin.js"></script>
+<script src="/static/js/pedido/resumoPedido.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

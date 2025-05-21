@@ -151,5 +151,5 @@ function confirmarPedido() {
 
 
     // Redireciona para a página de confirmação do pedido (ajustado o caminho)
-    window.location.href = "/PI-IV/templates/pedido/confirmacao.html";  // Caminho ajustado
+    window.location.href = "/PI-IV/templates/pedido/resumoPedido.html";  // Caminho ajustado
 }

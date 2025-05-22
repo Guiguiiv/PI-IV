@@ -2,6 +2,8 @@ package com.PI_IV.controller;
 
 
 
+import com.PI_IV.model.Cliente;
+import com.PI_IV.model.Endereco;
 import com.PI_IV.model.Pedido;
 import com.PI_IV.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +23,41 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
-    // Criar um pedido
     @PostMapping
-    public ResponseEntity<?> criarPedido(@RequestBody Pedido pedido) {
+    public ResponseEntity<?> criarPedido(@RequestBody Map<String, Object> pedidoData) {
         try {
-            // Define a data atual do pedido
-            pedido.setDtPedido(new Date());
+            Pedido pedido = new Pedido();
 
-            // Define o status inicial como "aguardando pagamento"
+            // Data e status
+            pedido.setDtPedido(new Date());
             pedido.setStatus("aguardando pagamento");
 
             // Gera número sequencial do pedido
             Integer numero = pedidoService.gerarNumeroPedidoSequencial();
             pedido.setNumeroPedido(numero);
 
-            // Salva o pedido no banco
+            // Mapeia cliente e endereço a partir dos dados recebidos
+            Map<String, Object> clienteMap = (Map<String, Object>) pedidoData.get("cliente");
+            Map<String, Object> enderecoMap = (Map<String, Object>) pedidoData.get("endereco");
+
+            // Criar objetos Cliente e Endereco apenas com o id
+            Cliente cliente = new Cliente();
+            cliente.setId((Integer) clienteMap.get("id"));
+
+            Endereco endereco = new Endereco();
+            endereco.setId((Integer) enderecoMap.get("id"));
+
+            pedido.setCliente(cliente);
+            pedido.setEndereco(endereco);
+
+            // Forma pagamento, frete, valor total
+            pedido.setFormaPagamento((String) pedidoData.get("formaPagamento"));
+            pedido.setValorFrete(Double.parseDouble(pedidoData.get("valorFrete").toString()));
+            pedido.setValorTotal(Double.parseDouble(pedidoData.get("valorTotal").toString()));
+
+            // Salva pedido
             Pedido salvo = pedidoService.criarPedido(pedido);
 
-            // Retorna uma resposta customizada para o frontend
             return ResponseEntity.ok(Map.of(
                     "mensagem", "Pedido criado com sucesso!",
                     "numeroPedido", salvo.getNumeroPedido(),
@@ -46,6 +65,7 @@ public class PedidoController {
                     "status", salvo.getStatus()
             ));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     Map.of("erro", "Erro ao salvar o pedido")
             );

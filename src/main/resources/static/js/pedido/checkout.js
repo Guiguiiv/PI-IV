@@ -53,14 +53,12 @@ function carregarCarrinho() {
     document.getElementById("totalResumo").textContent = (totalCompra + freteSelecionado).toFixed(2);
 }
 
-
 function atualizarResumo() {
     // Atualiza o resumo do pedido após selecionar o endereço
-    let freteSelecionado = parseFloat(document.getElementById("freteResumo").value) || 0;
+    let freteTexto = document.getElementById("freteResumo").textContent.replace("R$", "").trim().replace(",", ".");
+    let freteSelecionado = parseFloat(freteTexto) || 0;
     localStorage.setItem("freteSelecionado", freteSelecionado); // Salva o frete selecionado
     carregarCarrinho(); // Recarrega o carrinho com o novo valor de frete
-
-
 }
 
 
@@ -134,8 +132,6 @@ function confirmarPedido() {
         }));
     }
 
-    // Limpa o carrinho após finalização
-    localStorage.removeItem("carrinho");
 
     // Salva endereço no localStorage
     // Salva endereço
@@ -152,4 +148,11 @@ function confirmarPedido() {
 
     // Redireciona para a página de confirmação do pedido (ajustado o caminho)
     window.location.href = "/PI-IV/templates/pedido/resumoPedido.html";  // Caminho ajustado
+    // Salva uma cópia do carrinho atual para o resumo
+    const carrinhoAtual = JSON.parse(localStorage.getItem("carrinho")) || [];
+    localStorage.setItem("carrinhoResumo", JSON.stringify(carrinhoAtual));
+
+// Salva o tipo de pagamento (cartão ou boleto)
+    localStorage.setItem("pagamentoSelecionado", pagamentoSelecionado);
+
 }

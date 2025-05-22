@@ -99,6 +99,5 @@ function finalizarCompra() {
 
     localStorage.setItem("freteSelecionado", parseFloat(freteSelecionado)); // <-- isso aqui
 
-    localStorage.removeItem("carrinho");
     window.location.href = "/PI-IV/templates/pedido/checkout.html";
 }

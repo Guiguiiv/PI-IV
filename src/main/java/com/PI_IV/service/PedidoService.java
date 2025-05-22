@@ -20,6 +20,10 @@ public class PedidoService {
         Integer max = pedidoRepository.findMaxNumeroPedido();
         return (max != null) ? max + 1 : 10000; // Começa do 10000
     }
+    public Pedido salvarPedido(Pedido pedido) {
+        return pedidoRepository.save(pedido);
+    }
+
 
 
     public Pedido criarPedido(Pedido pedido) {
@@ -27,7 +31,7 @@ public class PedidoService {
     }
 
     public List<Pedido> listarPedidos() {
-        return pedidoRepository.findAll();
+        return pedidoRepository.findAllByOrderByDtPedidoDesc();
     }
 
     public Optional<Pedido> buscarPedidoPorId(Integer idPedido) {
@@ -37,5 +41,10 @@ public class PedidoService {
     public void deletarPedido(Integer idPedido) {
         pedidoRepository.deleteById(idPedido);
     }
+    public List<Pedido> buscarPedidosPorCliente(Integer clienteId) {
+        return pedidoRepository.findByClienteId(clienteId);
+    }
+
 }
+
 

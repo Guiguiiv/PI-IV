@@ -96,4 +96,25 @@ public class PedidoController {
         pedidoService.deletarPedido(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    // Buscar pedidos por ID do cliente
+    @GetMapping("/cliente/{id}")
+    public ResponseEntity<List<Pedido>> buscarPedidosPorCliente(@PathVariable Integer id) {
+        List<Pedido> pedidos = pedidoService.buscarPedidosPorCliente(id);
+        return new ResponseEntity<>(pedidos, HttpStatus.OK);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Pedido> atualizarStatus(@PathVariable Integer id, @RequestBody Pedido pedidoAtualizado) {
+        Optional<Pedido> pedidoExistente = pedidoService.buscarPedidoPorId(id);
+        if (pedidoExistente.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Pedido pedido = pedidoExistente.get();
+        pedido.setStatus(pedidoAtualizado.getStatus());
+
+        Pedido atualizado = pedidoService.salvarPedido(pedido);
+        return ResponseEntity.ok(atualizado);
+    }
+
+
 }

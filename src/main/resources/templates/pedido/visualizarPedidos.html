@@ -8,15 +8,30 @@
     <link rel="stylesheet" href="/static/css/cliente/editarCliente.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-primary shadow-sm">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm p-3">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center text-white fw-bold" href="/PI-IV/templates/produto/homeProdutosLogado.html">
-            <img src="/static/imagens/user.png" alt="Logo da Loja" width="40" class="me-2 rounded-circle border border-white">
-            Meus Pedidos
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <img src="/static/imagens/compras-online.png" alt="Logo da Loja" width="35" class="me-2">
+            <span class="fw-bold text-white">Loja Virtual</span>
         </a>
+        <div class="nav-options">
+            <span id="saudacaoCliente" class="text-white fw-semibold"></span>
+
+            <a href="/PI-IV/templates/produto/carrinhoLogado.html" title="Carrinho">
+                <img src="/static/imagens/carrinho-de-compras.png" alt="Carrinho" width="35">
+            </a>
+
+            <a href="/PI-IV/templates/endereco/sessaoEndereco.html" title="Configurações">
+                <img src="/static/imagens/config.png" alt="Configurações" width="35">
+            </a>
+
+            <a href="/PI-IV/templates/produto/homeProdutos.html" title="Sair">
+                <img src="/static/imagens/sair.png" alt="Sair" width="35">
+            </a>
+        </div>
     </div>
 </nav>
-
 <div class="container mt-4">
     <h3>Lista de Pedidos</h3>
     <table class="table table-bordered table-striped">
@@ -58,5 +73,7 @@
 </div>
 
 <script src="/static/js/pedido/visualizarPedidos.js"></script>
+<script src="/static/js/cliente/carregarLogin.js"></script>
+
 </body>
 </html>

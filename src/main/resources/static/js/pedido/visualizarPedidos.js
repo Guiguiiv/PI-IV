@@ -1,38 +1,52 @@
-// Função para preencher a tabela com os pedidos do localStorage
-function carregarPedidos() {
-    const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
-    const tbody = document.querySelector("tbody");
-    tbody.innerHTML = ""; // limpa conteúdo anterior
+async function carregarPedidos() {
+    const clienteLogado = localStorage.getItem("clienteLogado");
+    if (!clienteLogado) {
+        alert("Cliente não logado.");
+        return;
+    }
 
-    pedidos.forEach(pedido => {
-        const tr = document.createElement("tr");
+    // Parseia o JSON para obter o objeto cliente
+    let cliente;
+    try {
+        cliente = JSON.parse(clienteLogado);
+    } catch (e) {
+        console.error("Erro ao parsear cliente logado:", e);
+        alert("Erro ao processar dados do cliente.");
+        return;
+    }
 
-        tr.innerHTML = `
-            <td>#${pedido.numero}</td>
-            <td>${pedido.data}</td>
-            <td>${pedido.valor}</td>
-            <td>${gerarBadgeStatus(pedido.status)}</td>
-            <td><button class="btn btn-info btn-sm" onclick="mostrarDetalhes(${pedido.numero})">Mais Detalhes</button></td>
-        `;
 
-        tbody.appendChild(tr);
-    });
+    const idCliente = cliente.id;
+    console.log("ID do cliente logado:", idCliente);  // <-- aqui
+
+    if (!idCliente) {
+        alert("ID do cliente não encontrado.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/pedidos/cliente/${idCliente}`);
+        if (!response.ok) throw new Error("Erro ao buscar pedidos");
+
+        const pedidos = await response.json();
+        const tbody = document.querySelector("tbody");
+        tbody.innerHTML = "";
+
+        pedidos.forEach(pedido => {
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>#${pedido.numeroPedido}</td>
+                <td>${new Date(pedido.dtPedido).toLocaleDateString()}</td>
+                <td>R$ ${pedido.valorTotal.toFixed(2)}</td>
+                <td>${gerarBadgeStatus(pedido.status)}</td>
+                <td><button class="btn btn-info btn-sm" onclick="mostrarDetalhes(${pedido.numeroPedido})">Mais Detalhes</button></td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+    } catch (error) {
+        console.error("Erro ao carregar pedidos:", error);
+        alert("Não foi possível carregar os pedidos.");
+    }
 }
-
-// Gera o HTML do badge com base no status do pedido
-function gerarBadgeStatus(status) {
-    let classe = "bg-secondary";
-    if (status === "Finalizado") classe = "bg-success";
-    else if (status === "Em Processamento") classe = "bg-warning";
-    else if (status === "Cancelado") classe = "bg-danger";
-
-    return `<span class="badge ${classe}">${status}</span>`;
-}
-
-// Exemplo de ação para botão "Mais Detalhes"
-function mostrarDetalhes(numeroPedido) {
-    alert(`Você clicou em detalhes do pedido #${numeroPedido}`);
-}
-
-// Executa ao carregar a página
-window.onload = carregarPedidos;

@@ -1,11 +1,12 @@
 package com.PI_IV.controller;
 
-
-
 import com.PI_IV.model.Cliente;
 import com.PI_IV.model.Endereco;
 import com.PI_IV.model.Pedido;
 import com.PI_IV.service.PedidoService;
+import com.PI_IV.DAO.InterfaceCliente;
+import com.PI_IV.DAO.InterfaceEndereco;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
+
+    @Autowired
+    private InterfaceCliente clienteRepository;
+
+    @Autowired
+    private InterfaceEndereco enderecoRepository;
 
     @PostMapping
     public ResponseEntity<?> criarPedido(@RequestBody Map<String, Object> pedidoData) {
@@ -40,12 +47,14 @@ public class PedidoController {
             Map<String, Object> clienteMap = (Map<String, Object>) pedidoData.get("cliente");
             Map<String, Object> enderecoMap = (Map<String, Object>) pedidoData.get("endereco");
 
-            // Criar objetos Cliente e Endereco apenas com o id
-            Cliente cliente = new Cliente();
-            cliente.setId((Integer) clienteMap.get("id"));
+            // Buscar cliente e endereço do banco de dados
+            Integer idCliente = (Integer) clienteMap.get("id");
+            Integer idEndereco = (Integer) enderecoMap.get("id");
 
-            Endereco endereco = new Endereco();
-            endereco.setId((Integer) enderecoMap.get("id"));
+            Cliente cliente = clienteRepository.findById(idCliente)
+                    .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            Endereco endereco = enderecoRepository.findById(idEndereco)
+                    .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
 
             pedido.setCliente(cliente);
             pedido.setEndereco(endereco);
@@ -67,14 +76,16 @@ public class PedidoController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                    Map.of("erro", "Erro ao salvar o pedido")
+                    Map.of("erro", "Erro ao salvar o pedido: " + e.getMessage())
             );
         }
     }
 
 
 
-    // Listar todos os pedidos
+
+
+// Listar todos os pedidos
     @GetMapping
     public ResponseEntity<List<Pedido>> listarPedidos() {
         List<Pedido> pedidos = pedidoService.listarPedidos();

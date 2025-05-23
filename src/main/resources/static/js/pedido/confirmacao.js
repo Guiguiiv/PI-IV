@@ -1,20 +1,3 @@
-// Função para gerar número de pedido aleatório de 6 dígitos
-function gerarNumeroPedido() {
-    const numero = Math.floor(100000 + Math.random() * 900000);
-    document.getElementById("numero-pedido").textContent = numero;
-
-    // Salvando número no localStorage para visualizar depois nos "Meus Pedidos"
-    const pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
-    const novoPedido = {
-        numero: numero,
-        data: new Date().toLocaleDateString('pt-BR'),
-        valor: localStorage.getItem("valorTotal") || "R$ 0,00",
-        status: "Finalizado"
-    };
-    pedidos.push(novoPedido);
-    localStorage.setItem("pedidos", JSON.stringify(pedidos));
-}
-
 // Exibe saudação com o nome do cliente logado
 function exibirSaudacaoCliente() {
     const clienteLogado = JSON.parse(localStorage.getItem("clienteLogado"));
@@ -25,7 +8,7 @@ function exibirSaudacaoCliente() {
 }
 
 // Preenche os dados do pedido na tela
-function preencherResumoPedido() {
+function preencherResumoPedido(pedidoBackend) {
     const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
     const endereco = JSON.parse(localStorage.getItem("enderecoEntrega")) || {};
     const tipoPagamento = localStorage.getItem("pagamentoSelecionado") || "Não informado";
@@ -33,11 +16,20 @@ function preencherResumoPedido() {
     const frete = parseFloat(localStorage.getItem("freteSelecionado")) || 0;
     const total = parseFloat(localStorage.getItem("valorTotal")) || 0;
 
+    // Se recebeu o pedido do backend, usa ele para preencher valores dinâmicos
+    const numeroPedido = pedidoBackend?.numeroPedido || 0;
+    const valorTotal = pedidoBackend?.valorTotal || total;
+    const valorFrete = pedidoBackend?.valorFrete || frete;
+    const formaPagamentoBackend = pedidoBackend?.formaPagamento || (tipoPagamento === "cartao" ? "cartao" : "boleto");
+
+    // Atualiza o número do pedido
+    document.getElementById("numero-pedido").textContent = numeroPedido;
+
     // Preenche valores
-    document.getElementById("valor-total").textContent = `R$ ${total.toFixed(2)}`;
-    document.getElementById("valor-frete").textContent = `R$ ${frete.toFixed(2)}`;
+    document.getElementById("valor-total").textContent = `R$ ${valorTotal.toFixed(2)}`;
+    document.getElementById("valor-frete").textContent = `R$ ${valorFrete.toFixed(2)}`;
     document.getElementById("forma-pagamento").textContent =
-        tipoPagamento === "cartao" && pagamento?.numeroCartao
+        formaPagamentoBackend === "cartao" && pagamento?.numeroCartao
             ? `Cartão •••• ${pagamento.numeroCartao.slice(-4)}`
             : "Boleto bancário";
 
@@ -56,13 +48,12 @@ function preencherResumoPedido() {
         `;
         listaProdutos.appendChild(item);
     });
-
 }
 
 function montarPedidoParaEnvio() {
+    const dataAtual = new Date().toISOString();
     const clienteLogado = JSON.parse(localStorage.getItem("clienteLogado")) || {};
     const endereco = JSON.parse(localStorage.getItem("enderecoEntrega")) || {};
-    console.log("Endereço carregado do localStorage:", endereco);
 
     const tipoPagamento = localStorage.getItem("pagamentoSelecionado") || "boleto";
     const frete = parseFloat(localStorage.getItem("freteSelecionado")) || 0;
@@ -71,20 +62,21 @@ function montarPedidoParaEnvio() {
     const formaPagamento = tipoPagamento === "cartao" ? "cartao" : "boleto";
 
     return {
-        cliente: { id: clienteLogado.idCliente || clienteLogado.id },
-        endereco: { id: endereco.id || endereco.id_endereco },
+        cliente: { id: parseInt(clienteLogado.idCliente || clienteLogado.id) },
+        endereco: { id: parseInt(endereco.id || endereco.id_endereco) },
         formaPagamento: formaPagamento,
         valorFrete: frete,
-        valorTotal: total
+        valorTotal: total,
+        dtPedido: dataAtual,
+        status: "Aguardando Pagamento"
     };
 }
 
-// Função para enviar o pedido para o backend
+// Função para enviar o pedido para o backend e atualizar a tela com o pedido criado
 function enviarPedido() {
     const pedido = montarPedidoParaEnvio();
     console.log("Pedido a enviar:", pedido);
 
-    // Validar se tem id do cliente e endereço para evitar erro no backend
     if (!pedido.cliente.id) {
         console.error("Erro: cliente.id não definido");
         return;
@@ -112,16 +104,20 @@ function enviarPedido() {
         })
         .then(data => {
             console.log("Pedido salvo com sucesso:", data);
-            // Aqui pode limpar localStorage ou redirecionar o usuário
+            localStorage.removeItem("carrinho");
+
+            // Atualiza a tela com os dados do pedido retornado pelo backend (incluindo o número)
+            preencherResumoPedido(data);
+            exibirSaudacaoCliente();
         })
         .catch(error => {
             console.error("Falha ao salvar pedido:", error);
+            // Aqui você pode mostrar mensagem de erro na tela se quiser
         });
 }
 
-// Executa ao carregar a página
+// Executa ao carregar a página: só chama enviarPedido para iniciar fluxo
 window.onload = function () {
-    gerarNumeroPedido();
     exibirSaudacaoCliente();
     preencherResumoPedido();
     enviarPedido();

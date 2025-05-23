@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function criarLinhaPedido(pedido) {
         return `
             <tr data-id="${pedido.idPedido}">
-                <td>#${pedido.idPedido}</td>
+                <td>#${pedido.numeroPedido}</td>
                 <td>${formatarData(pedido.dtPedido)}</td>
                 <td>R$ ${pedido.valorTotal.toFixed(2).replace(".", ",")}</td>
                 <td>${badgeStatus(pedido.status)}</td>

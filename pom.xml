@@ -64,15 +64,14 @@
             <version>4.29.0</version>
         </dependency>
 
-        <!-- WebDriverManager para gerenciar drivers automaticamente -->
+        <!-- WebDriverManager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.9.3</version>
         </dependency>
 
-
-        <!-- JUnit 4 (para testes unitários e com Selenium) -->
+        <!-- JUnit 4 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -80,7 +79,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Boot Test (já inclui JUnit 5, mas útil para testes de integração) -->
+        <!-- Spring Boot Test (JUnit 5 incluído) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -92,6 +91,37 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Cucumber -->
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>7.11.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.11.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit Platform Suite API (para @Suite, @IncludeEngines etc.) -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-api</artifactId>
+            <version>1.10.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit Jupiter API (para testes JUnit 5 se desejar usar diretamente) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

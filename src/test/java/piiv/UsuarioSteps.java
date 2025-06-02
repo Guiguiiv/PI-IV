@@ -3,6 +3,7 @@ package piiv; // Verifique se este é o nome correto do seu pacote!
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.pt.*;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,9 +21,10 @@ public class UsuarioSteps {
 
     private WebDriver driver;
     private WebDriverWait wait;
-    private String baseUrl = "http://localhost:8080/cadastroUsuario.html";
+    private String baseUrl = "http://localhost:63342/PI-IV/templates/usuario/cadastrarUsuario.html?_ijt=38jgaptajss1g3v3tdpqid7pg2";
 
     // --- Hooks do Cucumber para configurar/desmontar o navegador ---
+    @Test
     @Before // Executado ANTES de cada cenário
     public void setup() {
         WebDriverManager.chromedriver().setup(); // Configura o ChromeDriver

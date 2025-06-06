@@ -1,11 +1,10 @@
 package com.PI_IV.controller;
 
-import com.PI_IV.DAO.InterfaceUsuario;
 import com.PI_IV.model.Usuario;
+import com.PI_IV.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,64 +16,56 @@ import java.util.Optional;
 public class UsuarioController {
 
     @Autowired
-    private InterfaceUsuario dao;
+    private UsuarioService usuarioService;
 
-    // Injeta o encriptador de senhas
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    // Método para listar todos os usuários no banco de dados
+    // Listar todos os usuários
     @GetMapping
     public ResponseEntity<List<Usuario>> listaUsuarios() {
-        List<Usuario> lista = (List<Usuario>) dao.findAll();
-        return ResponseEntity.status(200).body(lista);
+        List<Usuario> lista = usuarioService.listarUsuarios();
+        return ResponseEntity.ok(lista);
     }
 
-    // Método para criar um novo usuário no banco de dados
+    // Criar novo usuário
     @PostMapping
     public ResponseEntity<Usuario> criarUsuario(@RequestBody Usuario usuario) {
-        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));  // Criptografa a senha
-        Usuario usuarioNovo = dao.save(usuario);
-        return ResponseEntity.status(201).body(usuarioNovo);
+        Usuario usuarioNovo = usuarioService.criarUsuario(usuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioNovo); //retorna 201 SUCESSO
     }
 
-    // Método para alterar um usuário no banco de dados
+    // Editar usuário
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> editarUsuario(@PathVariable Integer id, @RequestBody Usuario usuarioAtualizado) {
-        Optional<Usuario> usuarioOpt = dao.findById(id);
+        Optional<Usuario> usuarioOpt = usuarioService.buscarUsuarioPorId(id);
 
         if (usuarioOpt.isPresent()) {
             Usuario usuarioExistente = usuarioOpt.get();
 
-            // Atualiza apenas os campos permitidos
             usuarioExistente.setNome(usuarioAtualizado.getNome());
             usuarioExistente.setEmail(usuarioAtualizado.getEmail());
             usuarioExistente.setGrupo(usuarioAtualizado.getGrupo());
 
-            // Verifica se a senha foi enviada e se não está vazia
             if (usuarioAtualizado.getSenha() != null && !usuarioAtualizado.getSenha().isEmpty()) {
-                usuarioExistente.setSenha(passwordEncoder.encode(usuarioAtualizado.getSenha()));
+                usuarioExistente.setSenha(usuarioAtualizado.getSenha());
             }
 
-            Usuario usuarioSalvo = dao.save(usuarioExistente);
+            Usuario usuarioSalvo = usuarioService.editarUsuario(usuarioExistente);
             return ResponseEntity.ok(usuarioSalvo);
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-
-    // Método de login do usuário
+    // Login
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Usuario usuario) {
-        Optional<Usuario> usuarioOpt = dao.findByEmail(usuario.getEmail());
+        Optional<Usuario> usuarioOpt = usuarioService.buscarUsuarioPorEmail(usuario.getEmail());
 
         if (usuarioOpt.isPresent()) {
             Usuario usuarioEncontrado = usuarioOpt.get();
 
-            // Verifica se a senha fornecida corresponde à senha encriptada no banco
-            if (passwordEncoder.matches(usuario.getSenha(), usuarioEncontrado.getSenha())) {
-                // Retorna um JSON com os dados do usuário
+            // Comparação usando BCrypt (o próprio service já está com o encoder)
+            if (new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
+                    .matches(usuario.getSenha(), usuarioEncontrado.getSenha())) {
                 return ResponseEntity.ok(usuarioEncontrado);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta");
@@ -84,48 +75,36 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado");
     }
 
-    // Método para buscar um usuário pelo ID
+    // Buscar por ID
     @GetMapping("/id/{id}")
     public ResponseEntity<Usuario> buscarPorId(@PathVariable Integer id) {
-        Optional<Usuario> usuario = dao.findById(id);
-        if (usuario.isPresent()) {
-            return ResponseEntity.ok(usuario.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Optional<Usuario> usuario = usuarioService.buscarUsuarioPorId(id);
+        return usuario.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
-    // Método para buscar um usuário pelo EMAIL
+    // Buscar por EMAIL
     @GetMapping("/email/{email}")
     public ResponseEntity<Usuario> buscarPorEmail(@PathVariable String email) {
-        Optional<Usuario> usuario = dao.findByEmail(email);
-        if (usuario.isPresent()) {
-            return ResponseEntity.ok(usuario.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Optional<Usuario> usuario = usuarioService.buscarUsuarioPorEmail(email);
+        return usuario.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
-    // Método para buscar um usuário pelo CPF
+    // Buscar por CPF
     @GetMapping("/cpf/{cpf}")
     public ResponseEntity<Usuario> buscarPorCpf(@PathVariable String cpf) {
-        Optional<Usuario> usuario = dao.findByCpf(cpf);
-        if (usuario.isPresent()) {
-            return ResponseEntity.ok(usuario.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        Optional<Usuario> usuario = usuarioService.buscarUsuarioPorCpf(cpf);
+        return usuario.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
-    // Método para ativar ou desativar um usuário
+    // Ativar ou desativar usuário
     @PutMapping("/ativarDesativar/{id}")
     public ResponseEntity<Usuario> ativarDesativarUsuario(@PathVariable Integer id, @RequestBody Usuario usuario) {
-        Optional<Usuario> usuarioExistente = dao.findById(id);
-        if (usuarioExistente.isPresent()) {
-            Usuario usuarioAtual = usuarioExistente.get();
-            usuarioAtual.setAtivo(usuario.isAtivo());  // Atualiza o status de ativação/desativação
-            dao.save(usuarioAtual);  // Salva no banco de dados
-            return ResponseEntity.ok(usuarioAtual);
+        Usuario atualizado = usuarioService.ativarDesativarUsuario(id, usuario.isAtivo());
+        if (atualizado != null) {
+            return ResponseEntity.ok(atualizado);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }

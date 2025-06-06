@@ -16,20 +16,22 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
     });
 
-    // Máscara para Data de Nascimento (DD-MM-AAAA)
+    // Máscara para Data de Nascimento (DD/MM/AAAA)
     dataNascimentoInput.addEventListener("input", function () {
         let valor = dataNascimentoInput.value.replace(/\D/g, "");
 
         if (valor.length > 2) {
-            valor = valor.slice(0, 2) + "-" + valor.slice(2);
+            valor = valor.slice(0, 2) + "/" + valor.slice(2);
         }
         if (valor.length > 5) {
-            valor = valor.slice(0, 5) + "-" + valor.slice(5, 9);
+            valor = valor.slice(0, 5) + "/" + valor.slice(5, 9);
         }
 
         dataNascimentoInput.value = valor.slice(0, 10);
     });
 
+
+    // Evento de envio do formulário
     document.getElementById("formCadastro").addEventListener("submit", function (event) {
         event.preventDefault();
 
@@ -39,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let senha = document.getElementById("senha").value.trim();
         let confirmaSenha = document.getElementById("confirmaSenha").value.trim();
         let grupo = document.getElementById("grupo").value;
+        let genero = document.getElementById("genero").value;
         let dataNascimento = dataNascimentoInput.value.trim();
 
         let formularioValido = true;
@@ -51,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("cpfErro").classList.add("d-none");
         }
 
-        // Validação da Senha
+        // Validação de senhas
         if (senha !== confirmaSenha) {
             document.getElementById("senhaErro").classList.remove("d-none");
             formularioValido = false;
@@ -59,14 +62,16 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("senhaErro").classList.add("d-none");
         }
 
+
         if (formularioValido) {
             const usuario = {
                 nome,
                 cpf,
                 email,
+                genero,
                 senha,
                 grupo,
-                data_nascimento: formatarDataParaISO(dataNascimento)
+                dataNascimento: formatarDataParaISO(dataNascimento) // Envio no formato YYYY-MM-DD
             };
 
             fetch("http://localhost:8080/usuarios", {
@@ -93,14 +98,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// Função para formatar data no padrão SQL
+
+// Converte DD/MM/AAAA para formato YYYY-MM-DD
 function formatarDataParaISO(data) {
     if (!data || data.length !== 10) return null;
-    const partes = data.split("-");
+    const partes = data.split("/");
     return `${partes[2]}-${partes[1]}-${partes[0]}`;
 }
 
-// Função de validação de CPF (simples, só pra evitar erro)
+
+// Validação de CPF (básica)
 function validarCPF(cpf) {
     if (!cpf || cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
 

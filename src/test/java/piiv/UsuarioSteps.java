@@ -21,7 +21,7 @@ public class UsuarioSteps {
 
     private WebDriver driver;
     private WebDriverWait wait;
-    private String baseUrl = "http://localhost:63342/PI-IV/templates/usuario/cadastrarUsuario.html?_ijt=38jgaptajss1g3v3tdpqid7pg2";
+    private String baseUrl = "http://localhost:8080/index.html";
 
     // --- Hooks do Cucumber para configurar/desmontar o navegador ---
     @Test
@@ -93,16 +93,6 @@ public class UsuarioSteps {
         System.out.println("Redirecionamento para loginCliente.html verificado com sucesso.");
     }
 
-    @Então("o sistema exibe uma mensagem de erro {string} sobre o CPF")
-    public void sistema_exibe_mensagem_erro_cpf(String mensagemEsperada) {
-        System.out.println("Verificando mensagem de erro de CPF...");
-
-        WebElement cpfErroDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cpfErro")));
-        assertTrue(cpfErroDiv.isDisplayed(), "Mensagem de erro de CPF ('" + mensagemEsperada + "') não está visível.");
-        assertEquals(mensagemEsperada, cpfErroDiv.getText(), "Mensagem de erro de CPF incorreta.");
-        System.out.println("Mensagem de erro de CPF: '" + mensagemEsperada + "' verificada.");
-    }
-
     @Então("o sistema exibe uma mensagem de erro {string} sobre as senhas")
     public void sistema_exibe_mensagem_erro_senhas(String mensagemEsperada) {
         System.out.println("Verificando mensagem de erro de senhas...");
@@ -111,5 +101,15 @@ public class UsuarioSteps {
         assertTrue(senhaErroDiv.isDisplayed(), "Mensagem de erro de senhas ('" + mensagemEsperada + "') não está visível.");
         assertEquals(mensagemEsperada, senhaErroDiv.getText(), "Mensagem de erro de senhas incorreta.");
         System.out.println("Mensagem de erro de senhas: '" + mensagemEsperada + "' verificada.");
+    }
+
+    @Então("o sistema exibe uma mensagem de erro {string} sobre o CPF")
+    public void sistema_exibe_mensagem_erro_cpf(String mensagemEsperada) {
+        System.out.println("Verificando mensagem de erro de CPF...");
+
+        WebElement cpfErroDiv = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cpfErro")));
+        assertTrue(cpfErroDiv.isDisplayed(), "Mensagem de erro de CPF ('" + mensagemEsperada + "') não está visível.");
+        assertEquals(mensagemEsperada, cpfErroDiv.getText(), "Mensagem de erro de CPF incorreta.");
+        System.out.println("Mensagem de erro de CPF: '" + mensagemEsperada + "' verificada.");
     }
 }

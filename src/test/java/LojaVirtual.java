@@ -30,7 +30,7 @@ public class LojaVirtual {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        driver.get("http://localhost:63342/PI-IV/templates/produto/homeProdutos.html?_ijt=e79s1p0sdj8e1a38jqr9psaueh");
+        driver.get("http://localhost:63342/PI-IV/templates/usuario/cadastrarUsuario.html?_ijt=tdkfmvad6pfbsmd83u2tg3det3");
         System.out.println("Setup finalizado: navegador aberto e página inicial carregada.");
         esperar(2000);
     }
@@ -187,13 +187,13 @@ public class LojaVirtual {
 
         WebElement inputEmail = driver.findElement(By.id("email"));
         inputEmail.clear();
-        inputEmail.sendKeys("luuiz.fe@outlook.com");
+        inputEmail.sendKeys("adm@gmail.com");
         System.out.println("Email preenchido.");
         esperar(2000);
 
         WebElement inputSenha = driver.findElement(By.id("senha"));
         inputSenha.clear();
-        inputSenha.sendKeys("12345");
+        inputSenha.sendKeys("1234");
         System.out.println("Senha preenchida.");
         esperar(2000);
 
